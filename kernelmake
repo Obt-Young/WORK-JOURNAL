@@ -1,0 +1,150 @@
+1. 查看一个CVE在哪个版本合入
+1）git log --grep="CVE-2016-9793"
+2）git name-rev --tags 1a43390629fc5a66fba9dffa959434a7e658d27b（commit号）
+
+
+2. Patch合入和版本发行
+	- CVE Patch
+	- DTS同步单Patch
+	- RedHat update Patch
+	代码合入和版本发布的流程：
+	■ Merge Window阶段
+		● 相关Patch合入本地linux仓库redhat-7.1.x-next分支
+		● 编译、检查kabi、用新内核启动测试
+		● 测试OK后使用apply-patch脚本将Patch加入到SOURCE仓库的redhat-7.1.x-next分支
+		● 记录版本历史到Excel表格
+		● 多个patch重复以上步骤
+	■ 版本发布阶段
+		● linux仓库，执行newversion脚本打上版本标签
+		● SOURCE仓库，执行newversion脚本打上版本标签
+		● linux/SOURCE仓库，merge（--ff-only）到redhat-7.1.x分支
+		● 将本地redhat-7.1.x分支和新版本tags推送到远端个人仓库和7部仓库
+		● OBS系统中提交编译请求，编译新版本rpm包(publish-rpm/保存OBS的source文件)。
+		● 发送新版本的release note
+		● 准备CCB评审资料并提交CR电子流（周二下班前）
+		● CCB评审OK后，提交Merge Request请求到3部仓库。
+		● Merge Request后进入下一个Merge Window阶段
+
+		
+
+7部3.10的git仓库：http://10.140.8.53/hulk/kernel-3.10-hulk.git
+
+
+
+
+从一个分支把一个commit提交到另一个分支上
+git cherry-pick commit号
+
+查看一个文件的提交历史
+git log -p -- include/linux/netfilter/x_tables.h
+
+※ git fetch --all
+
+===============================================================================================================================================
+
+1. 华为主线linux仓库
+git@code.huawei.com:linux/linux.git
+
+2. linux仓库
+1) 7部：git@code.huawei.com:hulk/linux-rh-3-10.git
+2) 自己：git@code.huawei.com:lWX457921/linux-rh-3-10.git
+
+3. patch仓库
+1) 7部：git@code.huawei.com:hulk/kernel-3.10-hulk.git
+2) 自己：git@code.huawei.com:lWX457921/kernel-3.10-hulk.git
+3) 3部：git@code.huawei.com:euler/kernel-3.10-hulk.git
+
+===============================================================================================================================================
+
+1. 从主线上拉取已有的patch（redhat-7.1.x-next）
+   /home/liwei/euleros-kernel-tools/linux
+ 1）./pick -h
+ 2）./pick --cve CVE-2017-7895 --bugzilla 3137 --commit 13bf9fbff0e5e099e2b6f003a0ab8ae145436309 -p(从主线clone指定commit的patch)
+ 3）git status （查看发生冲突的文件）
+ 4）vim fs/nfsd/nfsxdr.c （修改冲突文件）
+ 5）git add fs/nfsd/nfsxdr.c （修改之后，将冲突文件添加到本地仓库）
+ 6）git cherry-pick --continue   // 添加到本地仓库之后，继续上次commit。但是继续commit之后，git show不会有原本patch对应该的信息（cve号、bugzilla号）
+ 7）./pick --cve CVE-2017-7895 --bugzilla 3137 --commit 13bf9fbff0e5e099e2b6f003a0ab8ae145436309 --amend   // 添加commit前面的信息
+
+2. 发布新版本（redhat-7.1.x-next）
+    /home/liwei/euleros-kernel-tools/linux
+ 1）./newversion
+
+3. 编译内核（redhat-7.1.x-next）
+   /home/liwei/euleros-kernel-tools/linux
+ 1）mkdir build-linux-3.10.0-229.49.1.129（用于存放编译之后的内核）
+ 2）cp configs/kernel-3.10.0-x86_64.config build-linux-3.10.0-229.49.1.129/.config
+ 3）make O=build-linux-3.10.0-229.49.1.129 oldconfig	O指定编译的结果放到build-linux-3.10.0-229.49.1.129）
+ 4）make O=build-linux-3.10.0-229.49.1.129 -j 24	// 编译内核（24个线程同时编译）
+
+4. 检查KABI（redhat-7.1.x-next）
+   /home/liwei/euleros-kernel-tools/linux
+ 1）kabi_kernel_check.py  build-linux-3.10.0-229.49.1.128/Module.symvers build-linux-3.10.0-229.49.1.129/Module.symvers
+
+5. 编译rpm包（redhat-7.1.x-next）
+   /home/liwei/euleros-kernel-tools/SOURCES
+ 1）vim series.conf （在最后添加本次版本的patch说明，参考以往就好了，CVE号，版本号）
+   /home/liwei/euleros-kernel-tools/
+ 2）./apply-patches --dir bugfix --current --branch redhat-7.1.x-next --pick 57fb80c..d15ab7f -p （将redhat-7.1.x-next分支上的57fb80c[不包含此commit]到d15ab7f[包含此commit]的commit以patch方式弄到本分支上）
+   /home/liwei/euleros-kernel-tools/SOURCES
+ 3）./newversion （发布一个新的版本）
+   /home/liwei/euleros-kernel-tools/
+ 4）./apply-patches -b （编译rpm包）
+
+6. push到远程仓库
+   /home/liwei/euleros-kernel-tools/linux	（push远程炜哥的linux）
+1）git checkout redhat-7.1.x
+2）git log --oneline
+3）git merge redhat-7.1.x-next 
+4）git log --oneline
+5）git tag | grep 129	（129为发布的版本号，也是tag）
+6）git push origin redhat-7.1.x linux-3.10.0-229.49.1.129	（tag不能忘记）
+7）git log --oneline
+
+   /home/liwei/euleros-kernel-tools/SOURCES	（push到远程炜哥的SOURCES）
+1）git checkout redhat-7.1.x
+2）git log --oneline
+3）git merge redhat-7.1.x-next 
+4）git tag | grep 129
+5）git push origin redhat-7.1.x linux-3.10.0-229.49.1.129
+6）git log --oneline
+
+   /home/liwei/euleros-kernel-tools/SOURCES	（push到Euler3部的仓库）
+1）git format-patch -5 （有n个patch就写-n。此处是有5个patch，包含版本的那次commit）
+2）git checkout redhat-7.1.x-euler 
+3）git fetch --all
+4）git pull
+5）git log
+6）git am 000*.patch	（打上刚刚生成的patch）
+7）git log
+8）git push origin redhat-7.1.x-euler 
+9）rm -rf 000*.patch	（删除多余的patch文件）
+10）需要到http://code.huawei.com/lWX457921/kernel-3.10-hulk/commits/redhat-7.1.x-euler上merge request。
+	格式参照：http://code.huawei.com/euler/kernel-3.10-hulk/merge_requests/15
+
+	/home/zhaolei/euleros-kernel-tools/linux （把linux目录push到Euler7部的仓库）
+1）git fetch --all
+2）git log --oneline
+3）git merge liwei/redhat-7.1.x
+4）git log --oneline
+5）git push origin redhat-7.1.x 
+6）git push origin linux-3.10.0-229.49.1.129 （推送内核版本tag）
+
+	/home/zhaolei/euleros-kernel-tools/SOURCES （把SOURCES目录push到Euler7部的仓库）
+1）git fetch --all
+2）git log --oneline
+3）git merge liwei/redhat-7.1.x
+4）git log --oneline
+5）git push origin redhat-7.1.x 
+6）git push origin linux-3.10.0-229.49.1.129 （推送内核版本tag）
+
+7. 填充邮件中地址的网页信息
+   http://hulk.huawei.com/bugzilla/show_bug.cgi?id=3137（示例）
+1）Flags（填写+ -）
+2）Comment（参考别人的）
+示例：CVE-2017-7895	cffa5a0 nfsd: stricter decoding of write-like NFSv2/v3 ops
+                    2bfc0bb nfsd4: minor NFSv2/v3 write decoding cleanup
+                    bde4bb0 svcrdma: Do not add XDR padding to xdr_buf page vector
+需要打上两个依赖补丁。
+
+===============================================================================================================================================
