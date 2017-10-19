@@ -1,0 +1,60 @@
+
+
+#1.syslog、 syslog-ng和rsyslog关系
+    都是远程日志服务（基于UDP,TCP等网络协议），而不是本地日志服务（比如journal）
+    目前syslog-ng比较成熟，rsyslog虽然新，但是可能有一些未知的问题
+Basically, they are all the same, in the way they all permit the logging of data from different types of systems in a 
+central repository.
+
+But they are three different project, each project trying to improve the previous one with more reliability and functionalities.
+
+The Syslog project was the very first project. It started in 1980. It is the root project to Syslog protocol. At this time Syslog 
+is a very simple protocol. At the beginning it only supports UDP for transport, so that it does not guarantee the delivery of the messages.
+
+Next came syslog-ng in 1998. It extends basic syslog protocol with new features like:
+
+content-based filtering
+Logging directly into a database
+TCP for transport
+TLS encryption
+Next came Rsyslog in 2004. It extends syslog protocol with new features like:
+
+RELP Protocol support
+Buffered operation support
+Let's say that today they are three concurrent projects that have grown separately upon versions, but also grown in parallel regarding 
+what the neighbors was doing.
+
+I personally think that today syslog-ng is the reference in most cases, as it is the most mature project offering the main features you 
+may need, in addition to an easy and comprehensive setup and configuration.
+
+#2.再看journal的一些细节
+ -日志存放地址
+     journal的日志默认写入/var/log/journal/，可在/etc/systemd/journald.conf中配置，该目录是 systemd 软件包的一部分。
+     若被删除，systemd 不会自动创建它，直到下次升级软件包时重建该目录。
+ -日志可能丢失
+     如果该目录缺失，systemd 会将日志记录写入 /run/systemd/journal。这意味着，系统重启后日志将丢失。    
+ -日志大小限制
+      如果按上面的操作保留日志的话，默认日志最大限制为所在文件系统容量的 10%，即：如果 /var/log/journal 储存在 50GiB 的根分区中，
+      那么日志最多存储 5GiB 数据。可以修改配置文件指定最大限制。如限制日志最大 50MiB：
+      /etc/systemd/journald.conf
+      SystemMaxUse=50M
+ -还可以通过配置片段而不是全局配置文件进行设置：
+      /etc/systemd/journald.conf.d/00-journal-size.conf
+      [Journal]
+      SystemMaxUse=50M
+      
+#3.journal和syslog系列的配合使用
+    journal默认的输出socket是/dev/log
+    syslog系列提供了一个自己专用的socket，/run/systemd/journal/syslog
+    两者配合的关键就是把journal的输出从 /dev/log 切换到 /run/systemd/journal/syslog  ,在journald.conf中
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
