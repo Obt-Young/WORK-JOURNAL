@@ -1,0 +1,23 @@
+clock/time/timezone/UTC/local time
+
+linux系统里面有两个时钟：
+1）硬件时钟：独立于任何软件而运行的时钟，可以理解为晶振，在CPU中运行，即便断电。一般叫做Hardware clock、Real time clock、BIOS clock、CMOS clock。
+2）系统时间：此时间由内核中的一个时钟管理，由定时器中断驱动。系统时间使一个秒数，计数起点是1970.1.1 UTC，以在起点上加上秒数，就是当前的系统时间。
+
+设计硬件时钟的目的：linux系统不跑的情况下，计时还是要进行的。
+  “只有在系统启动的时候会议硬件时钟作为标准设置一下系统时间，其他情况下基本不会用到硬件时钟。”
+  
+
+       It is important that the System Time not have any discontinuities such as would happen if  you  used  the
+       date(1L)  program  to  set it while the system is running.  You can, however, do whatever you want to the
+       Hardware Clock while the system is running, and the next time Linux starts up, it will  do  so  with  the
+       adjusted time from the Hardware Clock.
+
+linux内核为操作系统维护了一个本地时区，这个本地时区要么被设置成系统环境变量TZ，要么被写到一个目录下/usr/share/zoneinfo。有些软件或者模块会依赖这个
+本地时区的值，比如vfat 文件系统。使用--hctosys命令会修改系统中的这个值。
+
+时区值有两个域：1）tz_minuteswest，表示本地时间比UTC时间落后了多少分钟；2）不用关注
+
+
+硬件时钟一般都不会太准，但是这个“不准”的进度是可预测的————基本上每天多的或少的时间是同一个数值。这被称作“系统偏移”
+
