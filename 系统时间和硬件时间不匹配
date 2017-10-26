@@ -1,0 +1,35 @@
+现象：通过date命令可获取系统时间；通过hwclock可获得硬件时间；理论上，每次重启系统，系统时间都应该自动与硬件时间对齐，但是实际情况是系统时间会与
+     虚拟机所在宿主机的系统时间对齐。
+     
+思路：首先，是重启系统导致的，所以要从系统重启动作出发。
+     在suse和euler中，系统重启时和时间相关的脚本有下面几个，他们的调用关系也如下：
+     rcS.d/S03boot.clock->/../boot.clock
+     此文件中明确有如下注释：
+     # Description:       Read hardware clock and set system clock
+     # Short-Description: Read hardware clock and set system clock
+     可见此文本专门用作读取硬件时间并以此设置系统时间。
+     在脚本中还有如下片段：
+        echo -n "Set System Time to the current Hardware Clock"
+        #
+        # Read out to hardware clock and for UTC calculate adjtime
+        # write back the system time later at reboot/shutdown time.
+        #
+     那么，再假设脚本注释没问题的前提下，下面的一系列动作将完成注释里面的功能，通过添加DEBUG语句，我们最终定位到如下片段：
+             if test "$USE_ADJFILE" = yes ; then
+            #
+            # For UTC calculate adjtime
+            #
+            if test ! -s /etc/adjtime ; then
+                {
+                        echo "0.0 0 0.0"
+                        echo "0"
+                        echo "UTC"
+                } > /etc/adjtime
+            else
+                test -w /etc/adjtime && adjfile_thirdline
+            fi
+            rtc_rule /sbin/hwclock $HWCLOCK --adjust
+							hwclock  -u  --adjust
+      可以揣测，上面一段脚本完成了系统时间向硬件时间的对齐。
+      
+      代码调查中。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。
