@@ -39,3 +39,11 @@ cp test.log ./result/tmplog.$APPENDIX;
 cat ./result/tmplog.$APPENDIX|grep -i "eth4:"|awk -F ':' '{print $2}'>>./result/eth4.$APPENDIX;
 cat ./result/tmplog.$APPENDIX|grep -i "eth5:"|awk -F ':' '{print $2}'>>./result/eth5.$APPENDIX;
 ______________________________________________________________________________________________
+excel操作
+1、用notepad等工具，按块操作把样本拿出来
+2、A列和B列都存放，把A列按顺序排一次顺序
+3、选中C列的第一个单元，选择公式IF，在第一栏输入   B1=A1,第二栏   不输入，第三栏输入   @
+4、选中C1，下拉至所有C列，不一样的行会显示@，一样的会显示0
+
+
+
