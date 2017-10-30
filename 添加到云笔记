@@ -1,0 +1,7 @@
+1. useradd -D     ----    查看useradd的默认参数
+2. 创建用户时，会把/etc/skel目录下的文件拷贝到新用户的HOME目录中
+   创建用户时，会在mail目录下，为当前用户创建一个mail文件
+3.userdel         ----    删除/etc/passwd文件下本用户的信息
+  userdel -r      ----    删除/etc/passwd文件下本用户信息的同时，把对应HOME目录也删除
+4.usermod -L      ----    锁定用户
+  usermod -U      ----    解锁用户
