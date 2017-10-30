@@ -1,0 +1,77 @@
+1. echo  -n  "hello"          运行完不换行
+2. echo "money $total"    --->  money 
+   echo "money \$total"   --->  money 1000000
+3. date +%y%m%d           --->  20171030
+4. 管道最流行的用法就是把命令的输出传给more
+5. num2=`expr $num + $num1`                    expr命令，表示后面的内容会被当做数学算式来运行
+   num2=[num + num1]                           方括号命令，表示方括号里面的内容是一个数学算式
+6. bc，浮点运算
+
+
+7. $?   --->   脚本运行的返回码
+8. exit 9   --->   返回码为9
+9. if something;then
+   ...
+   fi
+   
+   if something
+   then
+   ...
+   fi
+   
+10. if 语句     --->    直接就是语句，不要加``，就是可在交互式环境运行的命令
+11. if小结：     if 语句           语句执行成功，则执行后面的then
+                
+                if test a xx b    a和b的关系成立，则执行后面的then
+                if [ a xx b ]     a和b的关系成立，则执行后面的then
+     xx   --   a -eq b    a==b，运行then
+               a -ge b    a>=b, 运行then
+               a -gt b    a >b, 运行then
+               a -le b    a<=b, 运行then
+               a -lt b    a <b, 运行then
+               a -ne b    a!=b. 运行then
+
+                if test str1 xx str2    str1和str2的关系成立，则执行后面的then
+                if [ str1 xx str2 ]     str1和str2的关系成立，则执行后面的then
+     xx   --    str1 = str2     str1和str2一样，运行then
+                str1 != str2    str1和str2不一样，运行then
+                str1 > str2     str1大于str2，运行then     （如果用中括号，则此处要对大于号转义）
+                str1 < str2     str1小于str2，运行then     （如果用中括号，则此处要对小于号转义）
+                -n  str1        str1长度不为0，运行then     
+                -z  str1        str1长度为0，运行then     
+     
+                if test xx
+                if [ xx ]
+     xx   --    -d file     如果file存在且是目录，运行then
+                -e file     如果file存在，运行then
+                -f file     如果file存在且是文件，运行then
+                -r file     如果file存在且可读，运行then
+                -s file     如果file存在且非空，运行then
+                -w file     如果file存在且可写，运行then
+                -x file     如果file存在且可执行，运行then
+                -O file     如果file存在且是当前用户所有，运行then
+                -G file     如果file存在且默认组和当前用户想用，运行then
+                file1 -nt file2     如果file1比file2新，运行then
+                file1 -ot file2     如果file1比file2旧，运行then
+                
+                
+12              if [ xx ] && [ yy ]
+                if [ xx ] || [ yy ]
+                
+                
+                
+                
+                
+                
+                
+                
+     
+     
+     
+     
+     
+     
+     
+     
+     
+      
