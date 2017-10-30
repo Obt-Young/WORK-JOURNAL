@@ -1,2 +1,24 @@
-1.查看所有PCI接口设备信息：     lspci
-  查看所有PCI接口设备详细信息：  lspci -v
+1.查看所有PCI接口设备信息：       lspci
+  查看所有PCI接口设备详细信息：    lspci -v
+  
+2.硬件存储设备的分区管理：        fdisk
+fdisk /dev/硬件设备 --->   p  --->  n  ---->  w   --->  新分区出现在/dev目录下  --->  格式化分区 ---> mount -t ext4 /dev/sdc1 /mnt/xxx   ---> 写挂载信息到/etc/fstab
+查看硬件存储设备    当前分区情况   新建分区   确认修改   此时可在/dev目录下发现新的分区   目标文件系统     把目标文件系统的分区挂载到/mnt/xxx        挂载不受重启影响
+   
+     注：通常在创建分区的时候，最难得是找到可用的磁盘。较早的IDE硬盘，Linux用/dev/hdx来表示，较新的SATA硬盘和SCSI硬盘，Linux才用/dev/sdx来表示。
+     
+3.检查文件系统是否有毛病：        fsck
+  在做fsck之前，需要把指定的文件系统从挂载目录上卸下来
+  
+4.LVM(Logical Volume Manager)  逻辑卷管理器
+  
+5. 在yum源中查找/etc/yum.conf这个文件是由那个包提供的：           yum provides /etc/yum.conf
+
+6.  yum list updates              ---         已安装的软件，哪些有可用更新
+    yum update package_name       ---         更新某个软件
+    yum update                    ---         全更新
+    yum remove package_name       ---         卸载软件，保留配置文件和数据
+    yum earse  package_name       ---         删除软件及其所有数据
+    yum clean all                 ---         清理（配合yum update能解决很多位置问题）
+    yum deplist package_name      ---         显示软件的依赖关系
+    yum update --skip-broken      ---         跳过损坏的包，更新其他可更新的包
