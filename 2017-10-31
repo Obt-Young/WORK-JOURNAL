@@ -17,4 +17,10 @@
             NULL /* parent dir */, scull_read_procmem,
             NULL /* client data */);
             这里, 我们创建了一个名为 scullmem 的文件（/proc/scullmem）, 直接在 /proc 下, 带有缺省的, 全局可读的保护。
-            这里，create_proc_read_entry就是内核开放给驱动的入口，驱动只要把自己实现的read_proc链接到
+            这里，create_proc_read_entry就是内核开放给驱动的入口，驱动只要把自己实现的read_proc链接到这个入口函数上就好。
+            
+4.  ioctl
+    首先，ioctl是一个独立的系统调用，通过它，用户可以和内核的驱动程序直接沟通，而不需要内核参与协调。用户程序可以通过这个借口直接访问驱动中的某些内容，
+    而不是先调用一些系统函数，再转接到驱动中，再获得想要的内容
+
+5.  《嵌入式linux性能详解》
