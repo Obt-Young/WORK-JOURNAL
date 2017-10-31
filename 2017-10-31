@@ -24,3 +24,5 @@
     而不是先调用一些系统函数，再转接到驱动中，再获得想要的内容
 
 5.  《嵌入式linux性能详解》
+
+6.   http://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/gdb.html
