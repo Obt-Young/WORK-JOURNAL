@@ -14,6 +14,10 @@ static char *str = "hello world";
 /*********************
  *  * seq_operations->show
  *   * 必须返回0，否则什么也显示不出来
+ *      
+ *
+ *      --------------目标函数--------------
+ *      当 cat /proc/helloworld文件的时候，将会执行这个文件，有什么想输出的，都通过seq_printf来输出
  *    *********************/
 static int
 my_proc_show(struct seq_file *m, void *v)
