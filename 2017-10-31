@@ -10,8 +10,9 @@
     3.1  /proc文件系统的本来目的：  提供关于系统中运行的进程的信息。
     3.2  要创建一个只读 /proc 文件, 你的驱动必须实现一个函数（接口）来在文件被读时产生数据。当某个进程读文件时(使用 read 系统调用), 这个请求通过这个函数
          到达你的模块。
-    3.3  当读/proc文件的时候，内核分配一页内存用来存放驱动返回的数据，这些数据是驱动通过自己实现的接口read_proc来获得的，这个接口由内核给出，驱动实现。
+    3.3  当读/proc文件的时候，内核分配一页内存（4K）用来存放驱动返回的数据，这些数据是驱动通过自己实现的接口read_proc来获得的，这个接口由内核给出，驱动实现。
           int (*read_proc)(char *page, char **start, off_t offset, int count, int *eof, void *data);
+          注：默认是分配一页来存储数据，一般Proc文件里面的内容很少有大于4K的，如果有，需要指定start和eof来处理大于一页的情况。
     3.4  这接口需要驱动自己实现，那么在我实现了这个接口后，我需要在/proc目录里面创建一个属于这个接口的文件，并把二者连接到一起。比如：
             create_proc_read_entry("scullmem", 0 /* default mode */,
             NULL /* parent dir */, scull_read_procmem,
