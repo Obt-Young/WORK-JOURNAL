@@ -1,0 +1,5 @@
+yumdownloader下载之后
+#rm -rf /root/rpmbuild
+#rpm -i ***.src.rpm
+#cd /root/rpmbuild
+#rpmbuild -bp SPECS/**.spec
