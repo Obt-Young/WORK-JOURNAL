@@ -2,4 +2,4 @@
     原因：sshd的设置不允许root用户用密码远程登录
     方案：修改 /etc/ssh/sshd_config文件，PermitRootLogin 字段改成yes
     
-2.  http://hulk-archives.huawei.com/mirrors/centos/7/CentOS-7.0-1406-x86_64-Everything.iso
+2.  CentOS-7.0-1406-x86_64-Everything.iso
