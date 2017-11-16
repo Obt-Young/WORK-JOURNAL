@@ -1,0 +1,84 @@
+Usage:
+       tipc-pipc <options> [address 1] [address 2]
+        
+default address 1 is 0  （0是自己）
+default address 2 is same as address 1
+
+options:
+
+default values are marked with '*'
+
+       -h | --help
+               show this help
+
+       -l
+               run in server mode, accept multiple connections
+       -s
+               run in single connection server mode, exit on connection close
+
+       default mode is client mode
+
+       --sock_type *SOCK_STREAM | SOCK_DGRAM | SOCK_RDM | SOCK_SEQPACKET
+
+       --server_type *1000|<n>
+
+       --addr_type TIPC_ADDR_NAMESEQ | TIPC_ADDR_MCAST | *TIPC_ADDR_NAME
+               For TIPC_ADDR_NAME only address 1 is used.
+               For TIPC_ADDR_NAMESEQ or TIPC_ADDR_MCAST
+               address 1 and address 2 are used.
+
+       --delay *0|<ms>
+               Defines data reading and writing delay in ms.
+
+       --data_num *0|<count>
+               Generates defined number of sample data and sends is.
+
+       --data_size *0
+               Generates packets of defined size when data_num is defined.
+
+       --data_check
+               Check sequence numbers in received data,
+               generated with option data_num.
+
+       --buf_size *66000|<n> 
+               I/O buffer size (see TIPC_MAX_USER_MSG_SIZE).
+       --wait_peer *0
+               Wait for peer published state before communication.
+       --top
+               run topology client
+       --replay
+               force connectionless server send input to last connected client 
+
+shortcuts:
+
+       --rdm
+               sock_type = SOCK_RDM
+       --pct
+               sock_type = SOCK_PACKET
+       --stm
+               * sock_type = SOCK_STREAM
+       --sqp
+               sock_type = SOCK_SEQPACKET
+       --nam
+               * addr_type = TIPC_ADDR_NAME
+       --mc
+               addr_type = TIPC_ADDR_MCAST or TIPC_ADDR_NAMESEQ
+       --id
+               addr_type = TIPC_ADDR_ID
+Samples:
+
+SOCK_STREAM single connection server with address zero and client:
+
+       tipc-pipe -s | tee input
+
+       date | tipc-pipe
+
+SOCK_RDM server with address 123 and client:
+
+       tipc-pipe --rdm --replay -l 123
+
+       tipc-pipe --rdm 123
+
+Start topology client for all addresses of specified optional server type
+
+tipc-pipe --server_type=1000 --top -- 0 -1
