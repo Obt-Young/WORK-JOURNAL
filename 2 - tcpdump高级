@@ -1,0 +1,57 @@
+二、高级包头过滤
+---------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------
+首先了解如何从包头过滤信息
+（这里的proto指某种协议，比如tcp，ip，tipc等等，可以直接把proto换成相应的协议名）
+（这里x,y都是字节数，不是“比特位”）
+
+proto[x:y]          : 过滤从x字节开始的y“字节数”。比如ip[2:2]过滤出3、4字节（第一字节从0开始排）
+proto[x:y] & z = 0  : proto[x:y]和z的与操作为0      （可以用来过滤报文中某一段字节是否为某个值）
+proto[x:y] & z !=0  : proto[x:y]和z的与操作不为0    （可以用来过滤报文中某一段字节是否为某个值）
+proto[x:y] & z = z  : proto[x:y]和z的与操作为z      （可以用来过滤报文中某一段字节是否为某个值）
+proto[x:y] = z      : proto[x:y]等于z               （可以用来过滤报文中某一段字节是否为某个值）
+
+操作符 : >, <, >=, <=, =, !=
+例如：（判断ip协议的第一个字节“按位与”15（0x0f）之后的值）
+tcpdump -i eth1 'ip[0] & 15 > 5'
+或者
+tcpdump -i eth1 'ip[0] & 0x0f > 5'
+
+-------------------------------------------------------------
+tcpdump考虑了一些数字恐惧症者的需求，提供了部分常用的字段偏移名字：
+
+icmptype (ICMP类型字段)
+icmpcode (ICMP符号字段)
+tcpflags (TCP标记字段)
+
+ICMP类型值有：
+icmp-echoreply, icmp-unreach, icmp-sourcequench, icmp-redirect, icmp-echo, icmp-routeradvert, icmp-routersolicit, icmp-timxceed, 
+icmp-paramprob, icmp-tstamp, icmp-tstampreply, icmp-ireq, icmp-ireqreply, icmp-maskreq, icmp-maskreply
+
+TCP标记值：
+tcp-fin, tcp-syn, tcp-rst, tcp-push, tcp-push, tcp-ack, tcp-urg
+
+这样上面按照TCP标记位抓包的就可以写直观的表达式了：
+只抓SYN包
+tcpdump -i eth1 'tcp[tcpflags] = tcp-syn'
+抓SYN, ACK
+tcpdump -i eth1 'tcp[tcpflags] & tcp-syn != 0 and tcp[tcpflags] & tcp-ack != 0'
+
+-------------------------------------------------------------
+抓SMTP数据
+tcpdump -i eth1 '((port 25) and (tcp[(tcp[12]>>2):4] = 0x4d41494c))'
+抓取数据区开始为"MAIL"的包，"MAIL"的十六进制为0x4d41494c。
+
+抓HTTP GET数据
+tcpdump -i eth1 'tcp[(tcp[12]>>2):4] = 0x47455420'
+"GET "的十六进制是47455420
+
+抓SSH返回
+tcpdump -i eth1 'tcp[(tcp[12]>>2):4] = 0x5353482D'
+"SSH-"的十六进制是0x5353482D
+tcpdump -i eth1 '(tcp[(tcp[12]>>2):4] = 0x5353482D) and (tcp[((tcp[12]>>2)+4):2] = 0x312E)'
+抓老版本的SSH返回信息，如"SSH-1.99.."
+
+      *****注：从上面这些看出，HTTP,SMTP和SSH都是TCP包的一种类型，时寄生在TCP报文中的自定义应用数据结构*****
+      
+-------------------------------------------------------------
