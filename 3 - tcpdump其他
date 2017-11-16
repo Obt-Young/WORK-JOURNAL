@@ -1,0 +1,28 @@
+如果是为了查看数据内容
+建议用“tcpdump -s 0 -w filename”把数据包都保存下来，然后用wireshark的Follow TCP Stream/Follow UDP Stream来查看整个会话内容。
+
+-s 0是抓取完整数据包，否则默认只抓68字节。
+
+另外，用tcpflow也可以方便的获取TCP会话内容，支持tcpdump的各种表达式。
+
+3.1、UDP头
+
+  0      7 8     15 16    23 24    31
+ +--------+--------+--------+--------+
+ |     Source      |   Destination   |
+ |      Port       |      Port       |
+ +--------+--------+--------+--------+
+ |                 |                 |
+ |     Length      |    Checksum     |
+ +--------+--------+--------+--------+
+ |                                   |
+ |              DATA ...             |
+ +-----------------------------------+
+抓DNS请求数据
+tcpdump -i eth1 udp dst port 53
+3.2、其他
+
+-c参数对于运维人员来说也比较常用，因为流量比较大的服务器，靠人工CTRL+C还是抓的太多，甚至导致服务器宕机，于是可以用-c参数指定抓多少个包。
+
+time tcpdump -nn -i eth0 'tcp[tcpflags] = tcp-syn' -c 10000 > /dev/null
+上面的命令计算抓10000个SYN包花费多少时间，可以判断访问量大概是多少。
