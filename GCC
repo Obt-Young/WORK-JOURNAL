@@ -1,1 +1,84 @@
+gcc [-c|-S|-E] [-std=standard]
+           [-g] [-pg] [-Olevel]
+           [-Wwarn...] [-Wpedantic]
+           [-Idir...] [-Ldir...]
+           [-Dmacro[=defn]...] [-Umacro]
+           [-foption...] [-mmachine-option...]
+           [-o outfile] [@file] infile...
+
+
+#1 选项连续和不连续是不一样的
+
+#2 -I后紧跟目录，指定头文件查找目录，可使用多个-I来指定多个目录
+
+#3 预编译-E不生成文件，如果想预览预编译的效果，可重定向gcc -E -I./include test.c  >  1.txt
+
+#4 -x指定编译语言，此时无视文件后缀，可以有gcc -x c 1.txt，此时1.txt中的内容将被当做c语言对待
+
+#5 预处理和编译-S，生成汇编代码，汇编代码可读
+
+#6 -fno-asm，禁止将asm,inline和typeof用作关键字
+
+#7 -include，如果在文件中没有#include <xxx.h>或"xxx.h"，而又“不想改代码”，那么可以通过此命令在编译时引入头文件
+   //func.c
+     1   void myprintf(void)
+     2   {
+     3     printf("hello world\n");
+     3   }
+      
+     gcc -c func.c -include /usr/include/stdio.h -o func.o
+      
+      
+#8 -idirafter dir 在-I的目录里面查找失败,讲到这个目录里面查找. 
+   -iprefix prefix -iwithprefix dir 一般一起使用,当-I的目录查找失败,会到prefix+dir下查找
+   
+#9 -nostdinc，不再使用默认头文件路径，一般个-I一起使用以精确指定头文件位置
+
+#10 -C（区别与-c）,预处理时不删除注释，一般和-E一起使用，用以分析程序。和-S一起使用没效果，只能和-E一起，生成一个包含头文件且有注释的完整代码。
+
+#11 -M，生成文件关联的信息。有点像makefile中的依赖关系
+    [root@localhost func]# gcc -M func.c -I../include/1
+func.o: func.c /usr/include/stdc-predef.h ../include/1/1.h \
+ /usr/include/stdio.h /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
+ /usr/include/gnu/stubs-64.h \
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stddef.h \
+ /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+ /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stdarg.h \
+ /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+ /usr/include/stdlib.h /usr/include/bits/waitflags.h \
+ /usr/include/bits/waitstatus.h /usr/include/endian.h \
+ /usr/include/bits/endian.h /usr/include/bits/byteswap.h \
+ /usr/include/bits/byteswap-16.h /usr/include/sys/types.h \
+ /usr/include/time.h /usr/include/sys/select.h /usr/include/bits/select.h \
+ /usr/include/bits/sigset.h /usr/include/bits/time.h \
+ /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
+ /usr/include/alloca.h /usr/include/bits/stdlib-float.h
+
+#12 -MM，作用和-M一样，但是忽略#include <xxx.h>这种系统默认依赖
+  [root@localhost func]# gcc -MM func.c -I../include/1
+func.o: func.c ../include/1/1.h
+
+#13 -MD，和-M一样，但是会把结果输出到.d文件中
+
+#14 -MMD，和-MM一样，但是会把结果输出到.d文件中
+
+#15 -L，后跟函数库的路径，-L../mylib
+
+#16 -O0  -O1  -O2  -O3  ,编译器的四个优化级别，-O0表示没有优化，-O1表示缺省优化级别，-O3尽可能多的优化
+
+#17 -g，加入调试信息，加入调试信息的输出文件明显要大于未加入调试信息的文件
+
+#18 -static，禁止使用动态库
+
+#19 -share，使用动态库
+
+#20 -w，不生成任何警告
+
+#21 -Wall，生成所有警告
+
+#22 生成静态库文件 xxx.a  (见“制作静态库”)
+
+#23 生成动态库文件 xxx.so (见“制作动态库”)
 
