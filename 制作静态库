@@ -1,0 +1,13 @@
+静态库，一般指ar crv xxx.a x1.o x2.o ... xn.o命令产生的.a文件，其实就是把多个.o文件打包成一个.a文件的过程，主要为了“方便调用”
+当然，也可以不打包，那么在使用的时候相对麻烦点:    gcc 1.c x1.o x2.o ... xn.o -o 1    VS   ar crv xxx.a x1.o x2.o ... xn.o
+                                                                                       gcc xxx.a 1.c -o 1
+
+
+  #1 - 准备  首先把想要打包的文件编译成.o ， gcc -c x1.c x1.o 
+  
+  #2 - 打包  然后把所有的.o文件打包，生成.a ， ar crv xxx.a x1.o ... xn.o
+  
+  #3 - 使用  在需要使用的地方，直接链接.a即可， gcc 1.c xxx.a -o 1
+  
+  
+  -static怎么用？？？
