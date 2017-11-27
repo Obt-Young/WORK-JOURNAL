@@ -1,7 +1,0 @@
-动态库，以.so结尾的文件，由.c文件编译而成，不同于静态库的ar命令，而是在gcc的时候生成
-
-
-#1 - 生成   gcc -fPIC -shared -o 1.so x1.c x2.c ... xn.c
-
-#2 - 使用   gcc -Ldir -lname 
-
