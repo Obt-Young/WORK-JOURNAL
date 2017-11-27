@@ -1,21 +1,19 @@
-静态库，一般指ar crv xxx.a x1.o x2.o ... xn.o命令产生的.a文件，其实就是把多个.o文件打包成一个.a文件的过程，主要为了“方便调用”
-当然，也可以不打包，那么在使用的时候相对麻烦点:    gcc 1.c x1.o x2.o ... xn.o -o 1    VS   ar crv xxx.a x1.o x2.o ... xn.o
-                                                                                       gcc xxx.a 1.c -o 1
-
+# 静态库 http://www.cnblogs.com/jiqingwu/p/4325382.html
+  一般指ar crv xxx.a x1.o x2.o ... xn.o命令产生的.a文件，其实就是把多个.o文件打包成一个.a文件的过程，主要为了“方便调用”
+  当然，也可以不打包，那么在使用的时候相对麻烦点:    gcc 1.c x1.o x2.o ... xn.o -o 1    VS   ar crv xxx.a x1.o x2.o ... xn.o
+                                                                                         gcc xxx.a 1.c -o 1
 
   #1 - 准备  首先把想要打包的文件编译成.o ， gcc -c x1.c x1.o 
   
-  #2 - 打包  然后把所有的.o文件打包，生成.a ， ar crv xxx.a x1.o ... xn.o
+  #2 - 生成  然后把所有的.o文件打包，生成.a ， ar crv xxx.a x1.o ... xn.o
   
-  #3 - 使用  在需要使用的地方，直接链接.a即可， gcc 1.c xxx.a -o 1
+  #3 - 使用1  在需要使用的地方，直接链接.a即可， gcc 1.c xxx.a -o 1
+       使用2  编译时指明静态库的
   
-  
-  -static怎么用？？？
 
+# 动态库 http://www.cnblogs.com/jiqingwu/p/linux_dynamic_lib_create.html
+  以.so结尾的文件，由.c文件编译而成，不同于静态库的ar命令，而是在gcc的时候生成
 
-动态库，以.so结尾的文件，由.c文件编译而成，不同于静态库的ar命令，而是在gcc的时候生成
+  #1 - 生成   gcc -fPIC -shared -o 1.so x1.c x2.c ... xn.c
 
-
-#1 - 生成   gcc -fPIC -shared -o 1.so x1.c x2.c ... xn.c
-
-#2 - 使用   gcc -Ldir -lname 
+  #2 - 使用   gcc -Ldir -lname 
