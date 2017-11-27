@@ -7,6 +7,89 @@ http://www.ruanyifeng.com/blog/2015/02/make.html
     <target> : <prerequisites> 
     [tab]  <commands>
     
-    对上面这两行代码的解读，想要得到target，材料是prerequisites，工具是commands。
+    对上面这两行代码的解读：
+    1 - 想要得到target，材料是prerequisites，工具是commands。
+    2 - target是必须的，prerequisites和commands至少要有一个存在。
+    3 - target可以有多个，像prerequisites一样，多个目标之间用空格分割。
     
 #3 注意：Makefile什么都不是，我们面向的应该是make这个命令是如何使用的，Makefile只是按照make命令要求写的一个标准格式文件。
+
+#4 伪目标
+        clean:
+             rm -rf *
+      make动作是针对Makefile（或者-f指定一个文件）中的“目标”而言的，如果不指定，那么就取“第一个目标”，如果指定，则取指定的目标。
+   针对上面这种情况，有一个BUG，如果当前目录中有一个叫做clean的文件，那么make就会以为下面的命令行是用来生成clean文件的，所以不会再去执行。针对这种情况，
+   需要把clean明确指定为伪目标：            .PHONY:clean
+                                          clean:
+                                                    rm -rf *
+                                                    
+#5 前置条件（材料）
+    <target> : <prerequisites> 
+    [tab]  <commands>
+    只要前置条件列表和之前不一样了，或者里面的内容发生更新了，那么就使用commands重新构建target。
+        注：如果某个target后面没有前置条件，那么每次执行make <target>，commands都一定会执行。
+        
+#6 再说伪目标
+  有时候也可以这样用：当commands是空的时候，伪目标类似宏定义，比如 all:1.c 2.c 3.c ，此时make或者make all，相当于make 1.c ，make 2.c ， make 3.c
+  会依次执行all所指代的前置条件。
+        注：这也是几乎所有Makefile都在用的一点，需要输出多个目标的时候，就先定一个总的来代替多个目标
+        
+#7 命令
+   命令用来表示如何生成target，命令有一行或者多行“shell命令”组成。
+   默认情况下命令前面要有TAB键，如果想换成别的，可以设置环境变量.RECIPEPREFIX，比如.RECIPEPREFIX = >
+                                                                              all:
+                                                                              > echo Hello, world
+                                                                              
+#8 “命令”注意要点
+    命令可以有多行，但是不同于shell脚本，这多行是由多个进程一起执行的，所以相互之间没有关联。比如：
+    all:
+        export a=1
+        echo $a
+    针对上面这个文件，做make或者make all，无法正确获得a的值。
+    
+    可以用如下几种方法来解决：
+    1 - 命令放在一行，用分号隔开
+                     all:
+                        export a=1;echo $a
+    2 - 命令放在不同的行，用\连接
+                     all:
+                        export a=1 \
+                        echo $a
+    3 - 通过伪目标标注
+                     .ONESHELL:
+                     all:
+                        export a=1
+                        echo $a
+    
+#9 语法
+     #9-1  “回声”
+           默认情况下，会向标准输出打印每一条command。即使是以#开头，都会打印（但是前置TAB不可少，少了就不是command了）。这叫做“回声”
+           如果想关闭，只需要在command前面加一个@就行了。
+           实际工作过程中，一般会给command的注释前面加上@
+     #9-2  “通配符”
+     #9-3  “模式匹配”
+     #9-4  “变量和赋值”
+     #9-5  “内置变量”
+     #9-6  “自动变量”
+     #9-7  “循环和判断”
+     #9-8  “函数”
+
+#10 ----------------------终-----------------------
+     
+     
+     
+     
+     
+     
+     
+    
+    
+    
+    
+   
+   
+   
+   
+   
+     
+                                                    
