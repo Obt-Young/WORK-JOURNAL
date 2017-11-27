@@ -1,1 +1,12 @@
+http://www.ruanyifeng.com/blog/2015/02/make.html
 
+
+#1 make是一个命令，他会按照自己的规则执行名字为Makefile、makefile或者之类的名字，或者通过 make -f 1.txt 这样来指定执行一个文件。
+
+#2 make命令解析文件的最基本、最重要的途径就是如下格式：
+    <target> : <prerequisites> 
+    [tab]  <commands>
+    
+    对上面这两行代码的解读，想要得到target，材料是prerequisites，工具是commands。
+    
+#3 注意：Makefile什么都不是，我们面向的应该是make这个命令是如何使用的，Makefile只是按照make命令要求写的一个标准格式文件。
