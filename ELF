@@ -1,2 +1,21 @@
+https://www.cnblogs.com/xmphoenix/archive/2011/10/23/2221879.html
+
+
 ELF(Executable and Linking Format)，被广泛用在xnix系统中，作为可执行文件的标准格式。
 
+#1 对象文件（object files）有三类：
+    1 - 可重定位的对象文件(Relocatable file)
+        .o  .ko .a
+    2 - 可执行的对象文件(Executable file)
+        可执行文件
+    3 - 可被共享的对象文件(Shared object file)
+        .so
+        
+   使用file命令可以查看文件的相关信息，file命令通过查看ELF文件的隐式文件头获取这些信息————“里面记载了所适用的处理器、对象文件类型等各种信息”，可在
+   TISCv1.2的规范中找到具体的文件头格式。
+   
+   如果系统中安装了GNU binutils 包，可以使用readelf命令获取ELF隐式文件头内容：readelf -h ./1.o
+   
+#2 可以使用objdump查看对象文件（object files）的内容：objdump -d -j .text ./1.o ,输出1.o的代码段(.text)的反汇编后的代码
+
+#3 
