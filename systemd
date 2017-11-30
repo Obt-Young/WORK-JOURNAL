@@ -2,3 +2,11 @@ http://www.ruanyifeng.com/blog/2016/03/systemd-tutorial-part-two.html
 
 #1  -  开机启动
     对于支持
+
+
+#2  -  systemctl enable xxx.service
+        Created symlink from 
+            /etc/systemd/system/multi-user.target.wants/chrony-wait.service 
+            to 
+            /usr/lib/systemd/system/chrony-wait.service.
+        可见，这个动作会创建一个link，指向这个service，这样开机的时候就会自动执行，同时，一些依赖信息也会被注入到这个link文件中
