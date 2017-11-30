@@ -1,0 +1,23 @@
+#0 -  yum的工作原理
+    
+
+
+
+#1  -  使用本地ISO镜像作为yum源
+    
+    http://blog.51cto.com/wolfgang/1122018
+    
+    1 - 首先，将作为源的iso的挂载到系统上
+      mount -o loop /dev/cdrom /mnt/iso/
+      或者
+      mount -o loop /xxx/xxx.iso /mnt/iso/
+      
+    2 - 然后将文件iso.repo拷入文件夹/etc/yum.repos.d
+      如果文件夹/etc/yum.repos.d中有其他*.repo的文件，请备份后删除
+      iso.repo的内容如下：
+      [iso]
+      baseurl=file:///mnt/iso
+      gpgkey=file:///mnt/iso/RPM-GPG-KEY-redhat-beta
+      failovermethod=priority
+      enabled=1
+      gpgcheck=0
