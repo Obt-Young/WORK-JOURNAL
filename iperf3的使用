@@ -16,6 +16,8 @@ https://github.com/esnet/iperf
 #3  开启防火墙的5001端口（否则在运行时报错）
     /etc/sysconfig/iptables
     -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 5001 -j ACCEPT
+    重启防火墙以加载配置
+    service iptables restart
 
 #4  ----------------------使用----------------------------
     #4.1  创建服务端
