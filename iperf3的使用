@@ -1,0 +1,26 @@
+#1  下载与安装
+https://github.com/esnet/iperf
+下载工程；./configure;make;make install
+
+    软件成功安装至/usr/netperf目录下
+    /usr/netperf/bin目录下就是可执行程序
+    
+#2  这个工具能做什么
+    iperf是一个TCP/IP和UDP/IP性能测试工具，能够提供网络吞吐率信息，以及震动、丢包率、最大组和最大传输单元大小等统计信息，
+    可以由这些信息来分析网络的通信性能、定位网络瓶颈。
+
+    iperf以client/server方式工作，服务器端和客户端都使用同一程序iperf，服务器端使用-s选项，而客户端则使用-c选项。
+    在 client与server之间，首先建立一个控制连接，传递有关测试配置的信息，以及测试的结果；在控制连接建立并传递了测试配置
+    信息以后，client与server之间会再建立一个测试连接，用来回传递着特殊的流量模式，以测试网络的性能。
+  
+#3  开启防火墙的5001端口（否则在运行时报错）
+    /etc/sysconfig/iptables
+    -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 5001 -j ACCEPT
+
+#4  ----------------------使用----------------------------
+    #4.1  创建服务端
+          ./iperf3 -s
+          
+    #4.2  创建客户端
+          ./iperf3 -c 10.175.115.246 -t 60 -l 8k -i 10
+          
