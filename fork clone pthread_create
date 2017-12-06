@@ -1,0 +1,1 @@
+内核的最底层只有clone，fork和pthread_create分别是针对clone面向进程和面向线程的封装
