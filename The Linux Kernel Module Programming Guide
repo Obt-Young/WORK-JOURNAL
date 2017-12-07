@@ -1,0 +1,99 @@
+http://tldp.org/LDP/lkmpg/2.6/html/x44.html
+
+#1  -  How Do Modules Get Into The Kernel?
+  
+    #1.1  -  lsmod通过读/proc/modules文件来展示所有已加载模块的信息。
+    #1.2  -  modprobe会在/usr/lib/modules/3.10.107/modules.dep中寻找模块依赖关系（这个文件由depmod -a创建）
+             modprobe调用insmod，先装载当前模块的依赖模块，再装载目标模块
+             
+             modprobe = 读取modules.dep获取依赖关系 + insmod所有依赖关系中的模块
+             
+    #1.3  -  A module compiled for one kernel won't load if you boot a different kernel unless you enable CONFIG_MODVERSIONS 
+             in the kernel. We won't go into module versioning until later in this guide. Until we cover modversions, the examples 
+             in the guide may not work if you're running a kernel with modversioning turned on. However, most stock Linux distro 
+             kernels come with it turned on. If you're having trouble loading the modules because of versioning errors, compile a 
+             kernel with modversioning turned off.             
+             
+    #1.4  -  编译时，务必确认内核头文件的位置是否正确
+    
+    
+#2  -  Compiling Kernel Modules
+    #2.1  -  内核模块至少需要两个函数init_modules和clean_modules。（后期可以通过#include <linux/init.h>引入module_init和module_exit修改函数名）
+    #2.2  -  内核模块需要Makefile，一般是如下结构：
+              obj-m +=hello.o
+              
+              all:
+                  gcc -C /source_dir M=/source_dir modules
+              clean:
+                  gcc -C /source_dir M=/source_dir clean
+    #2.3  -  其他更复杂的操作，见：linux/Documentation/kbuild/makefiles.txt
+    #2.4  -  __init和__exit：init用来分配内存，exit用来释放内存，在内核启动函数和退出函数之前使用这两个宏，可以自动完成内存的管理
+              static int __init hello_3_init(void)
+              static void __exit hello_3_exit(void)
+              
+    #2.5  -  带参数的模块
+              使用module_param()宏向模块传递参数(defined in linux/moduleparam.h) 
+              
+    #2.6  -  包含多个源文件的module
+              在写Makefile的时候，需要做一些修改，具体可以参考现有模块的Makefile
+              
+    #2.7  -  在已经编译过的内核上新构建module（主要指kernel中本不包含某个module的代码，module的代码是后添加进去的）
+              如果编译module使用的内核源码版本和安装module使用的内核不同，那么可能是无法安装模块的，原因是因为模块的vermagic值和内核的不匹配。
+              可以通过modinfo查看vermagic值。
+              
+             不是很推荐在已经编译过的内核上单独编译module，一般都是重新编译一个完整的kernel
+              如何处理vermagic值的错误：http://tldp.org/LDP/lkmpg/2.6/html/x380.html
+              
+              
+#3  -  用户程序和module的区别
+              #3.1  -   module在启动函数中做初始化动作，然后对外提供服务，当module退出的时候，所有在启动函数中做的动作都要有逆动作。
+              #3.2  -   用户程序中使用某个函数，需要在编译的时候连接包含函数的object文件才性。
+                        在module程序中，不需要这样做，内核会把很多函数直接export出来，module直接使用就行了，不需要连接某个object文件。
+                        
+                        "-----------注:这些函数可以在这个文件中看到：/proc/kallsyms----------"
+              
+              #3.3  -   名称空间：
+                        即使再小的module，都会和整个内核link到一起，因此变量是否重名这个议题就很有必要讨论一下：
+                        方法一：把所有的变量都定位static；
+                        方法二：声明一个专用的symbol table，然后注册到内核里。
+                     注：这里的symbol table就是上面提到的，出现在/proc/kallsysms中的那些，这些symbol对整个内核代码空间可见
+                     
+                     小结：前面说的symbol table其实就是内核的符号表，物理位置在内核空间，0x80是其启始地址，是一个向量表，每一个
+                          symbol都占4个字节（还是1个字节？），里面存着一个地址值，这个值指向具体的实例（函数，数据结构，等等）。
+                     
+                     
+                     
+              #3.4  -   设备驱动
+                        设备驱动属于module的一种。
+                        unix中，每个硬件在/dev中都有一个代理文件，通过这个代理文件，可以与这个硬件通讯。
+                        驱动程序就是通过与这个代理文件的通讯来通讯来驱动硬件的。
+                        
+                        小结：接入OS的设备会出现在/dev目录中（通过mknod产生），设备分为块设备、字符设备和网络设备。
+                        /dev目录下有多少个文件，就有多少个设备接入本OS，内核想要和这些设备通讯，就要通过驱动程序。
+                        /dev目录下的文件都是不可以直接操作的（读写执行），对这些文件的操作都是通过驱动程序来进行的。
+                        /dev目录下文件有主设备号，标识操作这个文件需要使用什么样的驱动。
+                        
+                                      
+                        设备分为两类：块设备   字符设备  （网路设备这里暂不讨论）
+                        两类设备的区别：1.块设备有buffer，可用这个buffer组织构建要会给请求方的数据
+                                       2.块设备只能按块交互数据
+                              大部分设备都是字符设备
+                              
+                        在 /usr/src/linux/Documentation/devices.txt可以看到那些主设备号被占用了，用于什么目的                             
+              
+              #3.5  -   /dev下面文件是如何产生的
+                        安装OS后，这些/dev下面的文件就自动通过mknod命令产生了。
+                        例如：可以使用“mknode /dev/coffee c 12 2” 创建一个叫做coffee的字符设备，主设备号为12，从设备号为2
+                        
+                        
+              
+              
+              
+              
+              
+              
+
+
+
+
+              
