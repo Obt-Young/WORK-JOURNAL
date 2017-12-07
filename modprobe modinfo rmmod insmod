@@ -1,0 +1,10 @@
+#1  -  modprobe
+      
+
+#2  -  modinfo
+
+
+#3  -  rmmod
+
+
+#4  -  insmod
