@@ -85,9 +85,22 @@ http://tldp.org/LDP/lkmpg/2.6/html/x44.html
                         安装OS后，这些/dev下面的文件就自动通过mknod命令产生了。
                         例如：可以使用“mknode /dev/coffee c 12 2” 创建一个叫做coffee的字符设备，主设备号为12，从设备号为2
                         
-                        
+#4  -   字符设备驱动
+        #4.1  -   file_operations
+          linux/fs.h中定义了file_operations 结构体，这个结构体里面包含一系列函数指针，指向有驱动定义的函数实现，用来完成对设备的相关操作。
+          常用语法：      
+            struct file_operations fops = {
+	            .read = device_read,
+	            .write = device_write,
+	            .open = device_open,
+	            .release = device_release
+              };
+          上面的device_read，device_write，device_open和device_release都要是在驱动中被实现的。
               
-              
+        #4.2  -   file structure
+          在内核中，每个设备都被一个文件结构描述————file结构体。内核中，每一个打开的文件，内核都会分配一个struct file与之对应。
+                  注：1.这里的struct file是struct FILE的基本，FILE是在file上封装出来给用户使用的。
+                      2.还有一点，对于硬盘上的文件（这里是物理的），都有一个inode结构体与之对应，这个结构体代表了另外一个意思，这里要区分开。
               
               
               
