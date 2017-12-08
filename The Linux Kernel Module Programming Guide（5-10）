@@ -1,1 +1,24 @@
+#1  -   使用/proc文件的方式和使用驱动程序非常像————创建一个结构体，里面包含一些变量和指向某个函数的指针，然后使用init_module注册这个结构体到内核中
 
+#2  -   一般情况下，文件系统都存在于磁盘上，/proc文件系统存在于内存中
+
+#3  -   向/proc中写内容时，需要注意，此时是写到物理内存中的，对于module代码而言，可通过copy_from_user 和 get_user访问物理内存的，这点不同于用户
+        态程序，所以在写的时候要注意内存的管理
+       
+#4  -   linux中，有一套标准的文件系统注册流程：
+        1.首先要有一套接口来操作inode和文件，相应的数据结构为struct inode_operations和struct file_operations，其中file结构在inode结构体里面，
+          而procfs_read 和procfs_write又在file结构里面
+        2.任何想要操作/proc文件的函数，都要调用module_permission 进行验证，这个函数也在file结构中，我们可以在里面做任何想做的验证的事情
+          （看名字就是做相关验证的）
+        3.另一种方式，使用seq_file来操作/proc文件，see：http://tldp.org/LDP/lkmpg/2.6/html/x861.html
+        
+#5  -   使用sysfs取代proc，seehttp://tldp.org/LDP/lkmpg/2.6/html/x887.html
+
+#6  -   和/dev目录下的文件交互
+        使用ioctl函数可以绕过驱动程序，直接与设备交互（直接与/dev目录下的文件交互）
+        http://tldp.org/LDP/lkmpg/2.6/html/x892.html
+
+#7  -   mknod命令做了什么？
+        
+#8  -   系统调用
+        
