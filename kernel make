@@ -1,0 +1,72 @@
+如何编译内核：http://www.cnblogs.com/xiaocen/p/3717993.html
+
+
+1.生成模块配置文件
+  make oldconfig
+2.根据需求调整配置文件
+  vim .config
+3.开始编译内核
+  make -jN    (N为CPU核的2倍)
+4.拷贝所有.ko文件至/usr/lib/modules/3.10.107中
+  make modules_install    (make modules install不会创建相关目录，需要带下划线的)
+5.拷贝System.map和vmlinuz到/boot中（）
+  make install
+6.设置默认启动内核为当前的内核
+7.reboot
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#1  -  System.map文件是什么？
+    （http://blog.csdn.net/tommy_wxie/article/details/8039695）
+    （http://blog.csdn.net/wuyongpeng0912/article/details/46744651）
+内容如下：
+  00100000 A phys_startup_32
+  c0100000 T startup_32
+  c0100000 A _text                             注:表示内核代码第一个字节的地址                (3G)
+  ...
+  c02f9760 t .text.lock.kprobes
+  c02f97b0 T __kprobes_text_end
+  c02f9abe t iret_exc
+  c02fa1af A _etext                              注:内核代码结束的位置，之后为内核初始化的数据
+  c02fa1b0 A __start___ex_table
+  c02facc0 A __stop___ex_table
+  ...
+  c03e1b38 d xfrm_dst_cache
+  c03e1b3c d secpath_cachep
+  c03e1b40 A _edata                       注:内核初始化数据结束，之后为未初始化数据
+  ...
+  c043a068 b acqseq_lock.5
+  c043a068 A __bss_stop
+  c043a068 A _end                         注:内核未初始化数据结束
+  ffffe400 A __kernel_vsyscall
+  ffffe410 A SYSENTER_RETURN
+  ffffe420 A __kernel_sigreturn
+  ffffe440 A __kernel_rt_sigreturn
+说明：
+  文件内容为当前已编译内核的符号表，这个表中的每一项都代表一个函数或者变量，以及对应的类型和在内存中的地址（以供内核使用），这个文件里面的内容仅仅
+  在编译内核后才会改变，这个文件一般存在于三个位置：/ /boot /usr/src/linux-3.10.107。
+给谁用：
+  某些内核模块会使用，主要用做翻译（表的查询属性），当内核差生oops的时候，内核会输出一个地址值而不是函数名，这时候klogd日志模块就会查询这张表并做
+  翻译，输出到日志文件中，增加可读性。
+相同功能的还有：
+  内核还提供一个符号表————/proc/kallsyms  ，这个符号表内容结构和System.map相似，唯一不同的是，/proc/kallsyms里面包含动态添加的符号表，比如插入
+  内核的module，由于可随时插入的module在编译内核时没有编进内核镜像，所以其函数和变量也不在内核镜像中，因此不在System.map中。这时候如果modprobe
+  插入module，则module的函数和变量将会出现在/proc/kallsyms中，但是不会出现在System.map中。
+  二者区别在于，System.map面向内核，/proc/kallsyms面向用户程序。
+怎么产生的：
+  （1）./scripts/kallsyms.c负责生成System.map
+  （2）./kernel/kallsyms.c负责生成/proc/kallsyms
+  （3）./scripts/kallsyms.c解析vmlinux(.tmp_vmlinux)生成kallsyms.S(.tmp_kallsyms.S)，然后内核编译过程中将kallsyms.S(内核符号表)编入内核镜
+      像uImage内核启动后./kernel/kallsyms.c解析uImage形成/proc/kallsyms
+   要在一个内核中启用 kallsyms 功能，必须用进行内核配置，make menuconfig设置 CONFIG_KALLSYMS 选项为y；如果你要在 kallsyms 中包含全部符号信息，
+   必须设置 CONFIG_KALLSYMS_ALL 为y。
+符号表项的导出
+   驱动程序中，如果该驱动程序中有被其他内核代码调用的部分，可以用EXPORT_SYMBOL导出到内核符号表中。
+ 
+
+
+
+vmlinuz文件是什么？
+  vmlinux 是ELF文件，即编译出来的最原始的文件。 
+  vmlinuz应该是由ELF文件vmlinux经过OBJCOPY后，并经过压缩后的文件 
+  zImage是vmlinuz经过gzip压缩后的文件，适用于小内核
+  bzImage是vmlinuz经过gzip压缩后的文件，适用于大内核
