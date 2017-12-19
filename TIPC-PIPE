@@ -1,3 +1,32 @@
+---------------------------------------------           例子            -----------------------------------------------
+---------------------------------------------TIPC模块测试用例
+server:   ./tipcTS
+client:	  ./tipcTC 0
+---------------------------------------------TIPC模块测试用例
+
+---------------------------------------------自测用例
+===========多播通讯=============
+node1
+tipc-pipe -l --sock_type=SOCK_RDM --addr_type=TIPC_ADDR_MCAST 1 100
+node2
+tipc-pipe -l --sock_type=SOCK_RDM --addr_type=TIPC_ADDR_MCAST 1 100
+
+=============unicast通讯1=============
+node1（server）（name seq）
+tipc-pipe -l --addr_type=TIPC_ADDR_NAMESEQ 1 100
+node2（client）
+tipc-pipe --addr_type=TIPC_ADDR_NAME 55
+
+=============unicast通讯2=============
+node1（server）（name）
+tipc-pipe -l --addr_type=TIPC_ADDR_NAME 55
+node2（client）
+tipc-pipe --addr_type=TIPC_ADDR_NAME 55
+---------------------------------------------自测用例
+
+
+
+---------------------------------------------           详细手册            -----------------------------------------------
 Usage:
        tipc-pipe <options> [address 1] [address 2]
         
