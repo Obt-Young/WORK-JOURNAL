@@ -1,0 +1,48 @@
+#1  输出字符串
+      p （char *）字符串初始地址
+      
+#2  输出完整字符串
+      gdb的字符串输出有长度限制，最多只能输出多少个，可使用show print elements查看
+      当字符串商都超过这个限制时，可以通过set print elements N，来把这个限制扩展到N个字符
+      
+#3  gdb value <optimized out>的解决方式
+        调整优化深度，默认优化深度为-O2，调整为-O0即可
+        
+===================================================GDB 进阶=====================================================
+
+#1    http://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/gdb.html
+
+#2    打印表达式
+            print 表达式：简记为 p ，其中“表达式”可以是任何当前正在被测试程序的有效表达式，比如当前正在调试C语言的程序，
+                         那么“表达式”可以是任何C语言的有效表达式，包括数字，变量甚至是函数调用。
+            print a：将显示整数 a 的值
+            print ++a：将把 a 中的值加1,并显示出来
+            print name：将显示字符串 name 的值
+            print gdb_test(22)：将以整数22作为参数调用 gdb_test() 函数
+            print gdb_test(a)：将以变量 a 作为参数调用 gdb_test() 函数
+            display 表达式：在单步运行时将非常有用，使用display命令设置一个表达式后，它将在每次单步进行指令后，紧接着输
+                           出被设置的表达式及值。如： display a
+            watch 表达式：设置一个监视点，一旦被监视的“表达式”的值改变，gdb将强行终止正在被调试的程序。如： watch a
+            whatis ：查询变量或函数
+            info function： 查询函数
+            扩展info locals： 显示当前堆栈页的所有变量
+            
+#3    查询运行信息
+            where/bt ：当前运行的堆栈列表；
+            bt backtrace 显示当前调用堆栈
+            up/down 改变堆栈显示的深度
+            set args 参数:指定运行时的参数
+            show args：查看设置好的参数
+            info program： 来查看程序的是否在运行，进程号，被暂停的原因。
+            
+#4          分割窗口
+            layout：用于分割窗口，可以一边查看代码，一边测试：
+            layout src：显示源代码窗口
+            layout asm：显示反汇编窗口
+            layout regs：显示源代码/反汇编和CPU寄存器窗口
+            layout split：显示源代码和反汇编窗口
+            Ctrl + L：刷新窗口
+            
+#5          更强大的工具 --    cgdb
+            cgdb可以看作gdb的界面增强版,用来替代gdb的 gdb -tui。cgdb主要功能是在调试时进行代码的同步显示，这无疑增加了调试的方便性，
+            提高了调试效率。界面类似vi，符合unix/linux下开发人员习惯;如果熟悉gdb和vi，几乎可以立即使用cgdb。
