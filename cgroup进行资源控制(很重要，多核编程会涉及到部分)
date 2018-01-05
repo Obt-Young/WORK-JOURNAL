@@ -1,0 +1,75 @@
+官方：https://www.ibm.com/developerworks/cn/linux/1506_cgroup/index.html
+Docker：https://coolshell.cn/articles/17049.html
+
+
+#1  什么是cgroup？
+  1）看一个docker应用上面的解释，通过对比解释，比官方解释更容易理解：
+      前面，我们介绍了Linux Namespace，但是Namespace解决的问题主要是环境隔离的问题，这只是虚拟化中最最基础的一步，我们还需要解决对计算机
+      资源使用上的隔离。也就是说，虽然你通过Namespace把我Jail到一个特定的环境中去了，但是我在其中的进程使用用CPU、内存、磁盘等这些计算资源
+      其实还是可以随心所欲的。所以，我们希望对进程进行资源利用上的限制或控制。这就是Linux CGroup出来了的原因。
+      
+              （说白了，就是对进程做访问本机资源的约束）
+
+  2）官方解释：Linux CGroup全称Linux Control Group， 是Linux内核的一个功能，用来限制，控制与分离一个进程组群的资源（如CPU、内存、磁盘输入
+       输出等）。这个项目最早是由Google的工程师在2006年发起（主要是Paul Menage和Rohit Seth），最早的名称为进程容器（process containers）。
+       在2007年时，因为在Linux内核中，容器（container）这个名词太过广泛，为避免混乱，被重命名为cgroup，并且被合并到2.6.24版的内核中去。然后，
+       其它开始了他的发展。
+       
+#2  Cgroup可以用来管理当前正在运行进程的可访问资源：CPU时间、系统内存、网络带宽或者这些资源的组合。可以通过/sys/fs/cgroup这个文件系统来监控和
+    修改cgroup的配置策略，进而监视和控制进程的可使用资源。
+    
+#3  任务（task）：
+      在 cgroups 中，任务就是系统的一个进程，任务被罗列在tasks文件中。
+    
+    控制组（control group）：
+      控制组是一组进程，它们按照某种标准被归纳在一起。
+      Cgroups 中的资源控制都是以控制组为单位。
+      一个进程可以加入某个组，也可以切换到另一个组。
+    
+    层级（hierarchy）：
+      多个控制组可以组织成 hierarchical 的形式，既一颗控制组树。存在根和叶子节点关系，叶子节点集成根节点的某些属性（应该是可配置的）
+    
+    子系统（subsystem）：
+      子系统就是一个资源控制器（CPU、memory、blkio等等，在/sys/fs/cgroup下面的每一个目录都是一个控制器）。
+      比如 cpu 子系统就是控制 cpu 时间分配的一个控制器。
+      子系统必须附加（attach）到一个层级上才能起作用，一个子系统附加到某个层级以后，这个层级上的所有控制族群都受到这个子系统的控制。
+
+
+
+=============================   CGroup 部署及应用实例    =============================
+#1  实验
+      运行一个占用 CPU 的 Java 程序，如果不用 CGroup 物理隔离 CPU 核，那程序会由操作系统层级自动挑选 CPU 核来运行程序。
+      由于操作系统层面采用的是时间片轮询方式随机挑选 CPU 核作为运行容器，所以会在本机器上 24 个 CPU 核上随机执行。
+      如果采用 CGroup 进行物理隔离，我们可以选择某些 CPU 核作为指定运行载体。
+      
+#2  步骤
+--2.1-- 
+        切换到/sys/fs/cgroup/cpu/目录下，使用创建一个新目录（mkdir yangk），此时会发现在yangk目录下会自动创建一系列文件，这些文件很多和上一个目录
+        下的文件同名，猜测这就是所谓的树形结构中的父节点与叶子节点，cpu目录是根节点，yangk是叶子节点，如果在yangk下面再mkdir，会得到同样的结果，这是
+        第二层叶子节点。
+--2.2-- 
+        查看当前所有cgroup组：lscgroup
+        在某个cgroup组下面运行指定程序（把进程打入组中）
+        cgexec -g cpu,cpuacct:/yangk a            ------        a为可执行程序，这里把a放到/bin目录下了，所以可以直接这样
+                            
+                            “这个时候会发现a程序的pid已经在yangk目录下的tasks文件中了”
+                            注：如果程序是多线程的，那么需要找到这些线程ID,手动写到tasks文件中
+                            
+#3  cgroup的设计原理
+https://www.ibm.com/developerworks/cn/linux/1506_cgroup/index.html
+                            
+                            
+     
+      
+      
+
+
+
+
+
+
+
+
+
+
+
