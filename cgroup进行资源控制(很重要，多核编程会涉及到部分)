@@ -54,7 +54,9 @@ Docker：https://coolshell.cn/articles/17049.html
                             
                             “这个时候会发现a程序的pid已经在yangk目录下的tasks文件中了”
                             注：如果程序是多线程的，那么需要找到这些线程ID,手动写到tasks文件中
-                            
+
+
+=============================   CGroup 部署及应用实例    =============================                 
 #3  cgroup的设计原理
 https://www.ibm.com/developerworks/cn/linux/1506_cgroup/index.html
                             
