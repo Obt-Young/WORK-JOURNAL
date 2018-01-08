@@ -1,5 +1,6 @@
 官方：https://www.ibm.com/developerworks/cn/linux/1506_cgroup/index.html
 Docker：https://coolshell.cn/articles/17049.html
+http://www.infoq.com/cn/articles/docker-kernel-knowledge-cgroups-resource-isolation
 
 
 #1  什么是cgroup？
@@ -34,6 +35,18 @@ Docker：https://coolshell.cn/articles/17049.html
       比如 cpu 子系统就是控制 cpu 时间分配的一个控制器。
       子系统必须附加（attach）到一个层级上才能起作用，一个子系统附加到某个层级以后，这个层级上的所有控制族群都受到这个子系统的控制。
 
+#4  目前在用的子系统（subsystem）有如下（可能还有更多）
+        --1-- blkio： 这个subsystem可以为块设备设定输入/输出限制，比如物理驱动设备（包括磁盘、固态硬盘、USB等）。
+        --2-- cpu： 这个subsystem使用调度程序控制task对CPU的使用。
+        --3-- cpuacct： 这个subsystem自动生成cgroup中task对CPU资源使用情况的报告。
+        --4-- cpuset： 这个subsystem可以为cgroup中的task分配独立的CPU（此处针对多处理器系统）和内存。
+        --5-- devices 这个subsystem可以开启或关闭cgroup中task对设备的访问。
+        --6-- freezer 这个subsystem可以挂起或恢复cgroup中的task。
+        --7-- memory 这个subsystem可以设定cgroup中task对内存使用量的限定，并且自动生成这些task对内存资源使用情况的报告。
+        --8-- perfevent 这个subsystem使用后使得cgroup中的task可以进行统一的性能测试。
+            {![perf: Linux CPU性能探测器，详见https://perf.wiki.kernel.org/index.php/MainPage]}
+        --9-- *net_cls 这个subsystem Docker没有直接使用，它通过使用等级识别符(classid)标记网络数据包，从而允许 Linux 流量控制程序
+        （TC：Traffic Controller）识别从具体cgroup中生成的数据包。
 
 
 =============================   CGroup 部署及应用实例    =============================
@@ -56,16 +69,26 @@ Docker：https://coolshell.cn/articles/17049.html
                             注：如果程序是多线程的，那么需要找到这些线程ID,手动写到tasks文件中
 
 
-=============================   CGroup 部署及应用实例    =============================                 
-#3  cgroup的设计原理
-https://www.ibm.com/developerworks/cn/linux/1506_cgroup/index.html
+=============================   cgroup的设计原理    =============================
+http://www.infoq.com/cn/articles/docker-kernel-knowledge-cgroups-resource-isolation
+
+
+#1  cgroups的API以一个伪文件系统的方式实现，即用户可以通过文件操作实现cgroups的组织管理。
+    --1 cgroups的组织管理操作单元可以细粒度到线程级别，用户态代码也可以针对系统分配的资源创建和销毁cgroups，从而实现资源再分配和管理。
+    --2 所有资源管理的功能都以“subsystem（子系统）”的方式实现，接口统一。
+    --3 子进程创建之初与其父进程处于同一个cgroups的控制组。
+    
+    本质上来说，cgroups是内核附加在程序上的一系列钩子（hooks），通过程序运行时对资源的调度触发相应的钩子以达到资源追踪和限制的目的。
                             
-                            
+#2                      
      
       
       
-
-
+=============================   cgroup的使用    =============================
+查看所有的cgroup：lscgroup
+查看所有支持的子系统：lssubsys -a
+查看所有子系统挂载的位置： lssubsys –m
+查看单个子系统（如memory）挂载位置：lssubsys –m memory
 
 
 
