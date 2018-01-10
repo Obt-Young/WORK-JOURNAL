@@ -1,2 +1,38 @@
+
+========================================概念   原理=================================================
+
 什么是NTP：NTP is a “protocol” designed to synchronize the clocks of computers over a “network”.
 
+#1  在ntp的服务端，可以设置一个keyword——iburst，用来设置初始化时的poll间隔，防止网络压力大
+
+#2  大部分操作系统和硬件都包含（incorporate）一个TOY芯片，用来在系统下电后，继续维持时间计数，然后系统上电时会去里面读取时间来初始化
+    自己。
+    ntp服务起来以后，会自动与服务器时间同步，同时会调整芯片里面的时间。
+    如果系统没有TOY芯片，或者发现芯片的时间和服务器的时间差了1000s（默认情况下，可以设置）（20分钟左右），此时ntpd就会输出错误日志。
+    可以通过-g选项来强制设置本地时间，这种情况下会忽略TOY芯片的时间。
+    
+#3  ntpd设置时间的时候采取逐步靠近的原则，这样可保证时区的连续性
+
+
+
+========================================command line=================================================
+
+-k keyfile
+Specify the name and path of the file containing the NTP authentication keys.
+指定NTP认证秘钥文件路径
+
+-l logfile
+Specify the name and path of the log file. The default is the system log facility.
+指定日志文件路径
+
+-m
+Synchronize using NTP multicast messages on the IP multicast group address 224.0.1.1 (requires multicast kernel)
+使用ntp多播消息完成同步，多播的组地址为224.0.1.1
+
+
+
+========================================configuration  Files=================================================
+
+/etc/ntp.conf - the default name of the configuration file 
+/etc/ntp.drift - the default name of the drift file 
+/etc/ntp.keys - the default name of the key file
