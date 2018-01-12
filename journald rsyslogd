@@ -22,3 +22,6 @@ systemd的子守护进程：
 1：
 2：
 
+
+位于/var/log目录下的20个Linux日志文件[译]
+http://buptguo.com/2014/01/16/linux-var-log-files/
