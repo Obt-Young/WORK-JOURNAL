@@ -1,0 +1,17 @@
+#1  各种设备在/dev目录下的名字
+装置                    装置在Linux内癿文件名 
+IDE硬盘                /dev/hd[a-d] 
+SCSI/SATA/USB硬盘      /dev/sd[a-p] USB
+快闪碟                 /dev/sd[a-p](不SATA相同) 
+软盘驱劢器               /dev/fd[0-1] 
+打印机 25针:              /dev/lp[0-2] 
+USB:                /dev/usb/lp[0-15] 
+鼠标 USB:             /dev/usb/mouse[0-15] 
+PS2:                    /dev/psaux 
+当前CDROM/DVDROM                  /dev/cdrom 
+当前鼠标                 /dev/mouse
+磁带机 IDE:                  /dev/ht0 SCSI: /dev/st0
+
+
+
+    
