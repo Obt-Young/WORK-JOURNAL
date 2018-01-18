@@ -134,7 +134,7 @@ yumdownloader下载之后
 		3.2	修改
 				（可选）查询filename属于哪个rpm包：rpm -qf filename					
 				（可选）安装所有依赖：yum-builddep -y config-os-cloudedge.spec
-				（可选）展开源码：rpm -bp config-os-cloudedge-1.0-2.src.rpm
+				（可选）展开源码：rpmbuild -bp config-os-cloudedge-1.0-2.src.rpm
 				（可选）vim /SPEC/
 		3.3 制作新rpm包
 				rpmbuild -ba config-os-cloudedge.spec
