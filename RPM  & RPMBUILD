@@ -108,9 +108,43 @@ S.5....T c /etc/crontab
         使用rpm更新数据库
         rpm --rebuilddb
 =============================================== rpmbuild ===============================================
-#16     rpm命令处理rpm包，rpmbuild处理srpm包
+#1     rpm命令处理rpm包，rpmbuild处理srpm包
+
+#2  rpmbuild --rebuild xxx.src.rpm      ----------   把src.rpm整体编译并打包成rpm包，不安装！
+    rpmbuild --recomplie xxx.src.rpm    ----------   把src.rpm整体编译并打包成rpm包，并且安装！
+
+yumdownloader下载之后
+#rm -rf /root/rpmbuild
+#rpm -i ***.src.rpm
+#cd /root/rpmbuild
+#rpmbuild -bp SPECS/**.spec
 
 
+
+
+1. 下载目的ISO，装机
+
+	
+2. 找到对应的rpm包
+	
+
+3.	修改
+		3.1 解压
+				rpm -ivh config-os-cloudedge-1.0-2.src.rpm
+		3.2	修改
+				（可选）查询filename属于哪个rpm包：rpm -qf filename					
+				（可选）安装所有依赖：yum-builddep -y config-os-cloudedge.spec
+				（可选）展开源码：rpm -bp config-os-cloudedge-1.0-2.src.rpm
+				（可选）vim /SPEC/
+		3.3 制作新rpm包
+				rpmbuild -ba config-os-cloudedge.spec
+				新的包出现在RPMS目录中，这里为config-os-cloudedge-1.0-2.h1.x86_64.rpm
+
+4.	安装新的rpm包
+		4.1	送到自验机器
+				scp config-os-cloudedge-1.0-2.src.rpm 自验IP:/自验目录
+		4.2	安装rpm包
+				rpm -Uvh config-os-cloudedge-1.0-2.src.rpm
 
 
 
