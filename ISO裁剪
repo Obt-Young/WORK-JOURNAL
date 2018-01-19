@@ -1,0 +1,10 @@
+==============================================iso裁剪==============================================
+
+安装isocut
+yum install isocut 
+
+配置rpmlist
+/etc/isocut/rpmlist rpmlist 决定了iso中的包，维护好rpmlist即可。
+
+使用 
+isocut CentOS-xxx-x86_64-dvd.iso CentOS-xxx-x86_64-dvd_cut.iso
