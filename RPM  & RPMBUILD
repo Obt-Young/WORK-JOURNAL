@@ -1,8 +1,28 @@
 =============================================== 案例(以pam包为例) ==============================================
-#1  制作patch并重新编译
-    --1  准备需要的rpm包
-		yumdownload --source pam	
-		
+#1  制作patch(1~5) + 把patch打入生成新的rpm包(6~7) + 使用新的rpm包(8)
+    --1  准备需要的rpm源码包，最终会获得一个src.rpm包
+		yumdownload --source pam
+或者            wget http://xxxx.xxxx.com/pam-1.1.5-0.17.2.src.rpm
+    --2  解压，并把已经有的补丁打到源码中(可见，rpm包的构成就是 基线代码+针对基线代码各版本的patch)
+                rpm -ivh pam-1.1.5-0.17.2.src.rpm           (生成~/rpmbuild目录)
+		rpmbuild -bp ~/rpmbuild/SPECS/anaconda.spec (在rpmbuild中生成BUILD  BUILDROOT  RPMS  SOURCES  SPECS  SRPMS)
+    --3  备份BUILD中的源码
+                cp -R ~/rpmbuild/Linux-PAM-1.1.5 ~/rpmbuild/Linux-PAM-1.1.5.bak
+    --4  在~/rpmbuild/Linux-PAM-1.1.5中进行想做的修改
+    --5  制作patch
+                diff -Nur ~/rpmbuild/BUILD/Linux-PAM-1.1.5.bak  ~/rpmbuild/BUILD/Linux-PAM-1.1.5  >  new.patch
+    --6  重构项目
+                mv new.patch ~/rpmbuild/SOURCE
+		vim ~/rpmbuild/SPECS/pam.spec		【修改版本号，patch信息，changelog等】
+		rpmbuild -ba ~/rpmbuild/SPECS/pam.spec		(把当前的所有patch打到基线上)
+    --7  获取所有输出
+                重构后，会生成如下rpm包（这里把新版本定为0.17.99）
+                /var/tmp/build-root/standard-x86_64/usr/src/packages/SRPMS/pam-1.1.5-0.17.99.src.rpm
+                /var/tmp/build-root/standard-x86_64/usr/src/packages/RPMS/x86_64/pam-devel-1.1.5-0.17.99.x86_64.rpm
+                /var/tmp/build-root/standard-x86_64/usr/src/packages/RPMS/x86_64/pam-doc-1.1.5-0.17.99.x86_64.rpm
+                /var/tmp/build-root/standard-x86_64/usr/src/packages/RPMS/x86_64/pam-1.1.5-0.17.99.x86_64.rpm
+    --8  更新pam（更新动作不要解析依赖关系，所以只要基线版本OK，即使目标环境上什么都没有，也能更新！）
+                rpm -Uvh pam-1.1.5-0.17.99.x86_64.rpm
 
 
 
