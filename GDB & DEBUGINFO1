@@ -70,17 +70,25 @@ echo “/corefile/core-%e-%p-%t” > /proc/sys/kernel/core_pattern
   可以在编译时使用-g3
 
 
-======================================================GBDINFO======================================================
+======================================================DEBUGINFO======================================================
+http://blog.csdn.net/chinainvent/article/details/24129311
 
-
-
-
-
-
-
-
-
-
+#1  debuginfo是指gdb所使用的debug信息，比如使用gcc -g选项，编译的输出文件中就会包含debuginfo
+#2  一般情况下，都是把debuginfo和可执行文件分开，因为放在一起，会导致可执行文件过大
+#3  那么，如何获得可执行文件和debuginfo呢？使用如下命令可以
+    objcopy --only-keep-debug ./a.out a.out.debug    
+    （这里明显写的是objcopy，是拷贝出来，此时可执行文件中还是有debuginfo的，多出来一个.debug文件，原来的a.out大小不变）
+#4  那么，如果把a.out瘦身呢？使用如下命令可以
+    objcopy --strip-debug ./a.out（也可以使用strip --strip-debug ./a.out）
+    （此时，在使用gdb来调试a.out的时候，已经不行了，报错no debugging symbols found）
+#5  那么，该怎么使用debuginfo呢？使用如下命令即可
+    objcopy --add-gnu-debuglink=a.out.debug ./a.out
+    （此时，在使用gdb来调试a.out，发现可以了）
+#6  具体的原理是什么样的？以下选读，有空可以细看
+    http://blog.csdn.net/chinainvent/article/details/24129311
+    自然段（在Linux下，可执行文件或库，通常是.....The directory where separate debug symbols are searched for is "/usr/lib/debug".）
+#7  那么，.debug文件中到底是哪些内容呢？以下选读，有空细看
+    自然段（gcc目前会默认会采用DWARF 4格式.....但对于普通用户，通常不需要了解DWARF的太多细节，如果好奇的话，推荐阅读文献5）
 
 
 
