@@ -1,0 +1,16 @@
+https://wiki.archlinux.org/index.php/Iptables_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)
+
+iptables  --  ipv4
+ip6tables --  ipv6
+
+#1  罗列所有规则
+    iptables -nvL
+    
+#2  样例
+     iptables -A INPUT -p TCP -s 0/0 --dport 5000 -j REJECTT
+     
+     -A INPUT : 在INPUT规则中追加一条           (-A  =  append)
+     -p TCP   : 控制层为TCP                     (-p   =   protocol)
+     -s 0/0   : 收发双端的地址， 0/0代表任意收和任意发 ， 如指定某个ip对 ， 则本规则只约束此ip对    (short addr)
+     --dport  : 目的地端口（接收端端口）        (dport   =    destination port)
+     -j REJECT: 本条规则满足时，实施REJECT策略（还有其他策略）
