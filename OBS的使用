@@ -1,0 +1,5 @@
+http://openbuildservice.org/support/
+
+目标：1.搭建OBS服务器
+      2.clone内核项目，编译并维护内核
+      3.验证OBS服务器是否能正常工作
