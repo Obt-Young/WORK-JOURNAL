@@ -1,1 +1,108 @@
+http://blog.csdn.net/w6980112/article/details/48524021
+
+------------------------------------------------------------------------------------------------------------
+
+#1 制作RPM软件包并不是一件复杂的工作，其中的“关键在于编写SPEC软件包描述文件” 。
+   这个文件包含了软件包的诸多信息：软件包的名字、版本、类别、说明摘要、创建时要执行什么指令、安装时要执行什么操作、以及软件包所要包含的
+   文件列表等等。
+    （实际上RPM包的制作原理就是根据spec脚本文件，将软件安装到指定的虚拟目录中，按照指定的格式进行打包。）
+    （安装RPM包的时候，按照指定的格式安装到指定的目录下。）
+
+#2 编写spec脚本
+    spec脚本中有诸多关键字：
+     1- Name：软件包的名称，可以使用%{name}来引用这个名称的值（可以想象为环境变量）
+     2- Summary：软件包的内容概要
+     3- Version：软件的实际版本号，可以使用%{version}来引用这个名称的值
+     4- Release：发布序列号，表明是第几次打包，可以使用%{release}来引用这个名称的值
+     5- Group：软件分组（自己定义这个软件属于什么类别，貌似有一个标准的类别划分表）
+     6- License：软件授权方式，比如GPL,GPLv2
+     7- Source：源代码包，可以带多个用Source1、Source2等源，后面也可以用%{source1}、%{source2}引用
+     8- BuildRoot：这个是安装或编译时使用的“虚拟目录”，考虑到多用户的环境，一般定义为： 
+                   %{_tmppath}/%{name}-%{version}-%{release}-root 或 
+                   %{_tmppath}/%{name}-%{version}-%{release}-buildroot-%(%{__id_u} -n} 
+        （该参数非常重要，因为在生成rpm的过程中，执行make install时就会把软件安装到上述的路径中，在打包的时候，
+          同样依赖“虚拟目录”为“根目录”进行操作。 后面可使用$RPM_BUILD_ROOT 方式引用）
+     9- URL：软件的主页
+     10- Vendor：发行商或打包组织的信息，例如RedFlag Co,Ltd
+     11- Disstribution：发行版标识
+     12- Patch：补丁源码，可使用Patch1、Patch2等标识多个补丁，使用%patch0或%{patch0}引用
+     13- Prefix：%{_prefix} 这个主要是为了解决今后安装rpm包时，并不一定把软件安装到rpm中打包的目录的情况。
+         这样，必须在这里定义该标识，并在编写%install脚本的时候引用，才能实现rpm安装时重新指定位置的功能。
+     14- Build Arch：指编译的目标处理器架构，noarch标识不指定，但通常都是以/usr/lib/rpm/marcros中的内容为默认值。
+     15- Requires：该rpm包所依赖的软件包名称，可以用>=或<=表示大于或小于某一特定版本，例如： libpng-devel >= 1.0.20 zlib 
+                （“>=”号两边需用空格隔开，而不同软件名称也用空格分开）
+     16- Provides：指明本软件一些特定的功能，以便其他rpm识别
+     17- Packager：打包者的信息
+     18- %description：软件的详细说明
+
+    spec脚本的主体（上面介绍的是变量，这里介绍的是可执行命令）：
+        （！）注：这些命令配合rpm运行，比如构建rpm包就要用到build命令，即rpm build。可以理解为，在spec文件重定义命令的执行规则
+                 然后通过rpm <命令>来运行这些规则，这个有点像makefile里面的虚对象的意思，比如make clean是执行clean这个对象下面
+                 的shell命令
+      %prep 
+          预处理脚本
+      %setup -n %{name}-%{version}
+          把源码包解压并放好，通常是从/usr/src/asianux/SOURCES里的包解压到/usr/src/asianux/BUILD/%{name}-%{version}中。 
+          一般用%setup -c就可以了，但有两种情况：1）同时编译多个源码包；
+                                              2）源码的tar包的名称与解压出来的目录不一致，此时，就需要使用-n参数指定一下了。
+      %patch
+          打补丁 
+          通常补丁都会一起在源码tar.gz包中，或放到SOURCES目录下。一般参数为：
+          %patch -p1 使用前面定义的Patch补丁进行，-p1是忽略patch的第一层目录 
+          %Patch2 -p1 -b xxx.patch 打上指定的补丁，-b是指生成备份文件
+      %configure
+          这个不是关键字，而是rpm定义的标准宏命令。意思是执行源代码的configure配置
+          在/usr/src/asianux/BUILD/%{name}-%{version}目录中进行 ，使用标准写法，会引用/usr/lib/rpm/marcros中定义的参数。 
+          另一种不标准的写法是，可参考源码中的参数自定义，例如：
+              引用CFLAGS=”RPMOPTFLAGS"CXXFLAGS="RPM_OPT_FLAGS”  ： ./configure –prefix=%{_prefix}
+      %build
+          开始构建包 
+          在/usr/src/asianux/BUILD/%{name}-%{version}目录中进行make的工作 ，常见写法： 
+          引用make %{?_smp_mflags} OPTIMIZE=”%{optflags}” 都是一些优化参数，定义在/usr/lib/rpm/marcros中
+      %install
+          开始把软件安装到虚拟的根目录中 
+          在/usr/src/asianux/BUILD/%{name}-%{version}目录中进行make install的操作。
+          这个很重要，因为如果这里的路径不对的话，则下面%file中寻找文件的时候就会失败。 常见内容有： 
+          %makeinstall 这不是关键字，而是rpm定义的标准宏命令。也可以使用非标准写法： 
+          引用 
+          make DESTDIR=RPMBUILDROOTinstall或引用makeprefix=RPM_BUILD_ROOT install 
+          还可以使用常规的系统命令： 
+          引用 
+          install -d RPMBUILDROOT/cp−a∗RPM_BUILD_ROOT/
+      %clean
+          清理临时文件 
+      %pre
+          rpm安装前执行的脚本
+      %post
+          rpm安装后执行的脚本
+      %preun
+          rpm卸载前执行的脚本
+      %postun
+          rpm卸载后执行的脚本
+      %files
+          定义那些文件或目录会放入rpm中，这里会在虚拟根目录下进行，千万不要写绝对路径，而应用宏或变量表示相对路径。 
+          如果描述为目录，表示目录中除%exclude外的所有文件。
+      %defattr (-,root,root)
+          指定包装文件的属性，分别是(mode,owner,group)，-表示默认值，对文本文件是0644，可执行文件是0755
+      %exclude
+          列出不想打包到rpm中的文件 
+          ※小心，如果%exclude指定的文件不存在，也会出错的。
+      %changelog
+          变更日志
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
