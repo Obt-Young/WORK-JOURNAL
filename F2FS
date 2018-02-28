@@ -1,0 +1,14 @@
+http://blog.csdn.net/azhengye/article/details/78775309
+
+F2FS格式能有效提升应用的I/O访问速度
+
+确认内核是否配备了F2FS文件系统
+在内核的config文件中查找如下字样：
+CONFIG_F2FS_FS=y
+CONFIG_F2FS_STAT_FS=y
+CONFIG_F2FS_FS_XATTR=y
+CONFIG_F2FS_FS_POSIX_ACL=y
+CONFIG_F2FS_FS_SECURITY=y
+CONFIG_F2FS_CHECK_FS=y
+如果都是y的，则是开启的，否则不是开启的
+
