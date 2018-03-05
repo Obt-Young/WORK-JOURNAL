@@ -1,0 +1,152 @@
+              dd-7959  [003] .... 947329.321723: iscsi_queuecommand <-scsi_dispatch_cmd
+              dd-7959  [003] ..s. 947329.321725: iscsi_session_chkready <-iscsi_queuecommand
+    kworker/u8:1-23016 [000] .... 947329.321877: iscsi_xmitworker <-process_one_work
+    kworker/u8:1-23016 [000] ..s. 947329.321878: iscsi_prep_scsi_cmd_pdu <-iscsi_xmitworker
+    kworker/u8:1-23016 [000] ..s. 947329.321879: iscsi_check_tmf_restrictions <-iscsi_prep_scsi_cmd_pdu
+    kworker/u8:1-23016 [000] ..s. 947329.321879: iscsi_sw_tcp_pdu_alloc <-iscsi_prep_scsi_cmd_pdu
+    kworker/u8:1-23016 [000] ..s. 947329.321880: iscsi_add_hdr.isra.6 <-iscsi_prep_scsi_cmd_pdu
+    kworker/u8:1-23016 [000] ..s. 947329.321881: iscsi_tcp_task_init <-iscsi_prep_scsi_cmd_pdu
+    kworker/u8:1-23016 [000] ..s. 947329.321881: iscsi_sw_tcp_pdu_init <-iscsi_tcp_task_init
+    kworker/u8:1-23016 [000] ..s. 947329.321882: iscsi_xmit_task <-iscsi_xmitworker
+    kworker/u8:1-23016 [000] .... 947329.321883: iscsi_tcp_task_xmit <-iscsi_xmit_task
+    kworker/u8:1-23016 [000] .... 947329.321883: iscsi_sw_tcp_pdu_xmit <-iscsi_tcp_task_xmit
+    kworker/u8:1-23016 [000] .... 947329.321883: iscsi_tcp_segment_done <-iscsi_sw_tcp_pdu_xmit
+    kworker/u8:1-23016 [000] .... 947329.321959: iscsi_tcp_segment_done <-iscsi_sw_tcp_pdu_xmit
+    kworker/u8:1-23016 [000] .... 947329.321960: iscsi_sw_tcp_send_hdr_done <-iscsi_sw_tcp_pdu_xmit
+    kworker/u8:1-23016 [000] .... 947329.321960: iscsi_tcp_segment_done <-iscsi_sw_tcp_pdu_xmit
+    kworker/u8:1-23016 [000] ..s. 947329.321961: __iscsi_put_task <-iscsi_xmit_task
+          <idle>-0     [001] ..s. 947329.322650: iscsi_sw_tcp_data_ready <-tcp_data_queue
+          <idle>-0     [001] ..s. 947329.322652: iscsi_sw_tcp_recv <-tcp_read_sock
+          <idle>-0     [001] ..s. 947329.322652: iscsi_tcp_recv_skb <-iscsi_sw_tcp_recv
+          <idle>-0     [001] ..s. 947329.322653: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s. 947329.322653: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s. 947329.322654: iscsi_tcp_hdr_recv_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s. 947329.322654: iscsi_verify_itt <-iscsi_tcp_hdr_recv_done
+          <idle>-0     [001] ..s. 947329.322655: iscsi_itt_to_ctask <-iscsi_tcp_hdr_recv_done
+          <idle>-0     [001] ..s. 947329.322655: iscsi_verify_itt <-iscsi_itt_to_ctask
+          <idle>-0     [001] ..s. 947329.322655: iscsi_itt_to_task <-iscsi_itt_to_ctask
+          <idle>-0     [001] ..s. 947329.322656: iscsi_tcp_recv_skb <-iscsi_sw_tcp_recv
+          <idle>-0     [001] ..s. 947329.322748: iscsi_tcp_segment_unmap <-iscsi_sw_tcp_data_ready
+          <idle>-0     [001] ..s. 947329.322768: iscsi_sw_tcp_data_ready <-tcp_data_queue
+          <idle>-0     [001] ..s. 947329.322768: iscsi_sw_tcp_recv <-tcp_read_sock
+          <idle>-0     [001] ..s. 947329.322769: iscsi_tcp_recv_skb <-iscsi_sw_tcp_recv
+          <idle>-0     [001] ..s. 947329.322769: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s. 947329.322769: iscsi_tcp_segment_map.part.5 <-iscsi_tcp_segment_done
+          <idle>-0     [001] ..s1 947329.322770: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s2 947329.322771: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s2 947329.322771: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s2 947329.322771: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s2 947329.322772: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s1 947329.322772: iscsi_tcp_segment_map.part.5 <-iscsi_tcp_segment_done
+          <idle>-0     [001] ..s1 947329.322886: iscsi_tcp_segment_unmap <-iscsi_sw_tcp_data_ready
+          <idle>-0     [001] ..s. 947329.322985: iscsi_sw_tcp_data_ready <-tcp_rcv_established
+          <idle>-0     [001] ..s. 947329.322986: iscsi_sw_tcp_recv <-tcp_read_sock
+          <idle>-0     [001] ..s. 947329.322986: iscsi_tcp_recv_skb <-iscsi_sw_tcp_recv
+          <idle>-0     [001] ..s. 947329.322987: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s. 947329.322987: iscsi_tcp_segment_map.part.5 <-iscsi_tcp_segment_done
+          <idle>-0     [001] ..s1 947329.322989: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s2 947329.322989: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s2 947329.322990: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s2 947329.322990: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s2 947329.322991: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s1 947329.322992: iscsi_tcp_segment_map.part.5 <-iscsi_tcp_segment_done
+          <idle>-0     [001] ..s1 947329.322995: iscsi_tcp_segment_unmap <-iscsi_sw_tcp_data_ready
+          <idle>-0     [001] ..s. 947329.323136: iscsi_sw_tcp_data_ready <-tcp_rcv_established
+          <idle>-0     [001] ..s. 947329.323137: iscsi_sw_tcp_recv <-tcp_read_sock
+          <idle>-0     [001] ..s. 947329.323137: iscsi_tcp_recv_skb <-iscsi_sw_tcp_recv
+          <idle>-0     [001] ..s. 947329.323138: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s. 947329.323138: iscsi_tcp_segment_map.part.5 <-iscsi_tcp_segment_done
+          <idle>-0     [001] ..s1 947329.323139: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s2 947329.323140: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s2 947329.323140: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s2 947329.323140: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s2 947329.323141: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s1 947329.323141: iscsi_tcp_segment_map.part.5 <-iscsi_tcp_segment_done
+          <idle>-0     [001] ..s1 947329.323143: iscsi_tcp_segment_unmap <-iscsi_sw_tcp_data_ready
+          <idle>-0     [001] ..s. 947329.323241: iscsi_sw_tcp_data_ready <-tcp_rcv_established
+          <idle>-0     [001] ..s. 947329.323242: iscsi_sw_tcp_recv <-tcp_read_sock
+          <idle>-0     [001] ..s. 947329.323242: iscsi_tcp_recv_skb <-iscsi_sw_tcp_recv
+          <idle>-0     [001] ..s. 947329.323242: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s. 947329.323243: iscsi_tcp_segment_map.part.5 <-iscsi_tcp_segment_done
+          <idle>-0     [001] ..s1 947329.323244: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s2 947329.323244: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s2 947329.323245: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s2 947329.323245: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s2 947329.323245: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s. 947329.323246: iscsi_tcp_process_data_in <-iscsi_tcp_recv_skb
+          <idle>-0     [001] ..s. 947329.323246: iscsi_complete_pdu <-iscsi_tcp_process_data_in
+          <idle>-0     [001] ..s. 947329.323247: __iscsi_complete_pdu <-iscsi_complete_pdu
+          <idle>-0     [001] ..s. 947329.323247: iscsi_verify_itt <-__iscsi_complete_pdu
+          <idle>-0     [001] ..s. 947329.323247: iscsi_itt_to_ctask <-__iscsi_complete_pdu
+          <idle>-0     [001] ..s. 947329.323247: iscsi_verify_itt <-iscsi_itt_to_ctask
+          <idle>-0     [001] ..s. 947329.323248: iscsi_itt_to_task <-iscsi_itt_to_ctask
+          <idle>-0     [001] ..s. 947329.323249: iscsi_update_cmdsn <-__iscsi_complete_pdu
+          <idle>-0     [001] ..s. 947329.323249: __iscsi_update_cmdsn <-iscsi_update_cmdsn
+          <idle>-0     [001] ..s. 947329.323249: iscsi_complete_task <-__iscsi_complete_pdu
+          <idle>-0     [001] ..s. 947329.323250: __iscsi_put_task <-iscsi_complete_task
+          <idle>-0     [001] ..s. 947329.323250: iscsi_tcp_cleanup_task <-__iscsi_put_task
+          <idle>-0     [001] ..s. 947329.323259: iscsi_tcp_hdr_recv_prep <-iscsi_tcp_process_data_in
+          <idle>-0     [001] ..s. 947329.323260: iscsi_tcp_recv_skb <-iscsi_sw_tcp_recv
+          <idle>-0     [001] ..s. 947329.323261: iscsi_tcp_segment_unmap <-iscsi_sw_tcp_data_ready
+     kworker/3:1-3086  [003] .... 947329.323751: iscsi_queuecommand <-scsi_dispatch_cmd
+     kworker/3:1-3086  [003] ..s. 947329.323752: iscsi_session_chkready <-iscsi_queuecommand
+    kworker/u8:1-23016 [000] .... 947329.323865: iscsi_xmitworker <-process_one_work
+    kworker/u8:1-23016 [000] ..s. 947329.323866: iscsi_prep_scsi_cmd_pdu <-iscsi_xmitworker
+    kworker/u8:1-23016 [000] ..s. 947329.323867: iscsi_check_tmf_restrictions <-iscsi_prep_scsi_cmd_pdu
+    kworker/u8:1-23016 [000] ..s. 947329.323867: iscsi_sw_tcp_pdu_alloc <-iscsi_prep_scsi_cmd_pdu
+    kworker/u8:1-23016 [000] ..s. 947329.323867: iscsi_add_hdr.isra.6 <-iscsi_prep_scsi_cmd_pdu
+    kworker/u8:1-23016 [000] ..s. 947329.323868: iscsi_tcp_task_init <-iscsi_prep_scsi_cmd_pdu
+    kworker/u8:1-23016 [000] ..s. 947329.323868: iscsi_sw_tcp_pdu_init <-iscsi_tcp_task_init
+    kworker/u8:1-23016 [000] ..s. 947329.323869: iscsi_xmit_task <-iscsi_xmitworker
+    kworker/u8:1-23016 [000] .... 947329.323869: iscsi_tcp_task_xmit <-iscsi_xmit_task
+    kworker/u8:1-23016 [000] .... 947329.323870: iscsi_sw_tcp_pdu_xmit <-iscsi_tcp_task_xmit
+    kworker/u8:1-23016 [000] .... 947329.323870: iscsi_tcp_segment_done <-iscsi_sw_tcp_pdu_xmit
+    kworker/u8:1-23016 [000] .... 947329.323939: iscsi_tcp_segment_done <-iscsi_sw_tcp_pdu_xmit
+    kworker/u8:1-23016 [000] .... 947329.323940: iscsi_sw_tcp_send_hdr_done <-iscsi_sw_tcp_pdu_xmit
+    kworker/u8:1-23016 [000] .... 947329.323940: iscsi_tcp_segment_done <-iscsi_sw_tcp_pdu_xmit
+    kworker/u8:1-23016 [000] ..s. 947329.323941: __iscsi_put_task <-iscsi_xmit_task
+            sshd-20034 [001] ..s1 947329.324494: iscsi_sw_tcp_data_ready <-tcp_rcv_established
+            sshd-20034 [001] ..s1 947329.324495: iscsi_sw_tcp_recv <-tcp_read_sock
+            sshd-20034 [001] ..s1 947329.324495: iscsi_tcp_recv_skb <-iscsi_sw_tcp_recv
+            sshd-20034 [001] ..s1 947329.324495: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+            sshd-20034 [001] ..s1 947329.324496: iscsi_tcp_segment_done <-iscsi_tcp_recv_skb
+            sshd-20034 [001] ..s1 947329.324496: iscsi_tcp_hdr_recv_done <-iscsi_tcp_recv_skb
+            sshd-20034 [001] ..s1 947329.324496: iscsi_verify_itt <-iscsi_tcp_hdr_recv_done
+            sshd-20034 [001] ..s1 947329.324497: iscsi_complete_pdu <-iscsi_tcp_hdr_recv_done
+            sshd-20034 [001] ..s1 947329.324497: __iscsi_complete_pdu <-iscsi_complete_pdu
+            sshd-20034 [001] ..s1 947329.324497: iscsi_verify_itt <-__iscsi_complete_pdu
+            sshd-20034 [001] ..s1 947329.324498: iscsi_itt_to_ctask <-__iscsi_complete_pdu
+            sshd-20034 [001] ..s1 947329.324498: iscsi_verify_itt <-iscsi_itt_to_ctask
+            sshd-20034 [001] ..s1 947329.324498: iscsi_itt_to_task <-iscsi_itt_to_ctask
+            sshd-20034 [001] ..s1 947329.324499: iscsi_update_cmdsn <-__iscsi_complete_pdu
+            sshd-20034 [001] ..s1 947329.324499: __iscsi_update_cmdsn <-iscsi_update_cmdsn
+            sshd-20034 [001] ..s1 947329.324499: iscsi_complete_task <-__iscsi_complete_pdu
+            sshd-20034 [001] ..s1 947329.324500: __iscsi_put_task <-iscsi_complete_task
+            sshd-20034 [001] ..s1 947329.324500: iscsi_tcp_cleanup_task <-__iscsi_put_task
+            sshd-20034 [001] ..s1 947329.324501: iscsi_tcp_hdr_recv_prep <-iscsi_tcp_hdr_recv_done
+            sshd-20034 [001] ..s1 947329.324501: iscsi_tcp_recv_skb <-iscsi_sw_tcp_recv
+            sshd-20034 [001] ..s1 947329.324503: iscsi_tcp_segment_unmap <-iscsi_sw_tcp_data_ready
+			
+			
+11:36:48.928702 52:54:00:a1:e0:79 > 52:54:00:21:d7:53, ethertype IPv4 (0x0800), length 114: 192.168.122.15.40087 > 192.168.122.179.3260: Flags [P.], seq 144:192, ack 145, win 52886, options [nop,nop,TS val 3223585 ecr 932548136], length 48
+11:36:48.929194 52:54:00:21:d7:53 > 52:54:00:a1:e0:79, ethertype IPv4 (0x0800), length 66: 192.168.122.179.3260 > 192.168.122.15.40087: Flags [.], ack 192, win 122, options [nop,nop,TS val 932549220 ecr 3223585], length 0
+11:36:48.929222 52:54:00:21:d7:53 > 52:54:00:a1:e0:79, ethertype IPv4 (0x0800), length 114: 192.168.122.179.3260 > 192.168.122.15.40087: Flags [P.], seq 145:193, ack 192, win 122, options [nop,nop,TS val 932549220 ecr 3223585], length 48
+
+11:36:48.929755 52:54:00:a1:e0:79 > 52:54:00:21:d7:53, ethertype IPv4 (0x0800), length 114: 192.168.122.15.40087 > 192.168.122.179.3260: Flags [P.], seq 192:240, ack 193, win 52886, options [nop,nop,TS val 3223586 ecr 932549220], length 48
+11:36:48.930392 52:54:00:21:d7:53 > 52:54:00:a1:e0:79, ethertype IPv4 (0x0800), length 114: 192.168.122.179.3260 > 192.168.122.15.40087: Flags [P.], seq 193:241, ack 240, win 122, options [nop,nop,TS val 932549221 ecr 3223586], length 48
+
+11:36:48.930424 52:54:00:21:d7:53 > 52:54:00:a1:e0:79, ethertype IPv4 (0x0800), length 4162: 192.168.122.179.3260 > 192.168.122.15.40087: Flags [P.], seq 241:4337, ack 240, win 122, options [nop,nop,TS val 932549221 ecr 3223586], length 4096
+11:36:48.930442 52:54:00:a1:e0:79 > 52:54:00:21:d7:53, ethertype IPv4 (0x0800), length 66: 192.168.122.15.40087 > 192.168.122.179.3260: Flags [.], ack 4337, win 52886, options [nop,nop,TS val 3223587 ecr 932549221], length 0
+
+11:36:48.930548 52:54:00:21:d7:53 > 52:54:00:a1:e0:79, ethertype IPv4 (0x0800), length 4162: 192.168.122.179.3260 > 192.168.122.15.40087: Flags [P.], seq 4337:8433, ack 240, win 122, options [nop,nop,TS val 932549221 ecr 3223586], length 4096
+11:36:48.930571 52:54:00:a1:e0:79 > 52:54:00:21:d7:53, ethertype IPv4 (0x0800), length 66: 192.168.122.15.40087 > 192.168.122.179.3260: Flags [.], ack 8433, win 52886, options [nop,nop,TS val 3223587 ecr 932549221], length 0
+
+11:36:48.930696 52:54:00:21:d7:53 > 52:54:00:a1:e0:79, ethertype IPv4 (0x0800), length 4162: 192.168.122.179.3260 > 192.168.122.15.40087: Flags [P.], seq 8433:12529, ack 240, win 122, options [nop,nop,TS val 932549221 ecr 3223586], length 4096
+11:36:48.930722 52:54:00:a1:e0:79 > 52:54:00:21:d7:53, ethertype IPv4 (0x0800), length 66: 192.168.122.15.40087 > 192.168.122.179.3260: Flags [.], ack 12529, win 52886, options [nop,nop,TS val 3223587 ecr 932549221], length 0
+
+11:36:48.930858 52:54:00:21:d7:53 > 52:54:00:a1:e0:79, ethertype IPv4 (0x0800), length 4162: 192.168.122.179.3260 > 192.168.122.15.40087: Flags [P.], seq 12529:16625, ack 240, win 122, options [nop,nop,TS val 932549222 ecr 3223587], length 4096
+11:36:48.930888 52:54:00:a1:e0:79 > 52:54:00:21:d7:53, ethertype IPv4 (0x0800), length 66: 192.168.122.15.40087 > 192.168.122.179.3260: Flags [.], ack 16625, win 52886, options [nop,nop,TS val 3223588 ecr 932549222], length 0
+
+11:36:48.931712 52:54:00:a1:e0:79 > 52:54:00:21:d7:53, ethertype IPv4 (0x0800), length 114: 192.168.122.15.40087 > 192.168.122.179.3260: Flags [P.], seq 240:288, ack 16625, win 52886, options [nop,nop,TS val 3223588 ecr 932549222], length 48
+11:36:48.932332 52:54:00:21:d7:53 > 52:54:00:a1:e0:79, ethertype IPv4 (0x0800), length 114: 192.168.122.179.3260 > 192.168.122.15.40087: Flags [P.], seq 16625:16673, ack 288, win 122, options [nop,nop,TS val 932549223 ecr 3223588], length 48
+11:36:48.971911 52:54:00:a1:e0:79 > 52:54:00:21:d7:53, ethertype IPv4 (0x0800), length 66: 192.168.122.15.40087 > 192.168.122.179.3260: Flags [.], ack 16673, win 52886, options [nop,nop,TS val 3223629 ecr 932549223], length 0
