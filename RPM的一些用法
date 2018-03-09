@@ -1,3 +1,7 @@
 #1  -   安装kernel的rpm包 ： rpm -ivh kernel-xxx.newversion.rpm   
         如果kernel是在新版本安装旧版本的内核  ：  rpm  -ivh --oldpackage kernel-xxx.oldversion.rpm
         （注：这尼玛rpm也太鸡巴吊了吧！）
+
+#2  -    有时候会出现多个包互相依赖的情况，这种情况下就把所有需要的包都放到一个目录下，rpm -ivh *.rpm 即可
+
+#3  -    有时候需要安装的软件在当前机器上有其他版本，此时会提示conflict，这种情况下，如果执意要安装，则rpm  -ivh  xxx.rpm  --force
