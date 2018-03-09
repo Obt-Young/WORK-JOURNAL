@@ -1,0 +1,4 @@
+brandbot: 
+tool to write branding to /etc/os-release When you start it1, 
+it looks for /var/lib/rhsm/branded_name and adds in /etc/os-release:
+PRETTY_NAME=first_line_from_branded_name
