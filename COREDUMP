@@ -6,3 +6,6 @@ ulimit -c 0  限制core文件大小为0（关闭）
 
 gdb ./1 core.xxxx
 运行后，会自动停在出问题的位置
+
+
+https://www.zhihu.com/question/61826619
