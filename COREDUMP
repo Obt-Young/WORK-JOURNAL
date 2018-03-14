@@ -9,3 +9,6 @@ gdb ./1 core.xxxx
 
 
 https://www.zhihu.com/question/61826619
+
+
+查看某个命令属于那个包： yum whatprovides /usr/bin/ps 
