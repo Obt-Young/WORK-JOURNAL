@@ -3,6 +3,13 @@
     方案：修改 /etc/ssh/sshd_config文件，PermitRootLogin 字段改成yes
 
 
+1.修改可登陆权限
+#/etc/ssh/sshd_config
+PermitRootLogin改成yes
+
+2.重启sshd
+
+
 如果想5min后不自动退出，还需要修改：
 1. /etc/ssh/sshd_config
 ClientAliveCountMax 为非0，最好>3
