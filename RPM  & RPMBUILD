@@ -12,7 +12,7 @@
     --5  制作patch
                 diff -Nur ~/rpmbuild/BUILD/Linux-PAM-1.1.5.bak  ~/rpmbuild/BUILD/Linux-PAM-1.1.5  >  new.patch
     --6  重构项目
-                mv new.patch ~/rpmbuild/SOURCE
+                mv new.patch ~/rpmbuild/SOURCES
 		vim ~/rpmbuild/SPECS/pam.spec		【修改版本号，patch信息，changelog等】
 		rpmbuild -ba ~/rpmbuild/SPECS/pam.spec		(把当前的所有patch打到基线上)
     --7  获取所有输出
