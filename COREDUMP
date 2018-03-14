@@ -12,3 +12,10 @@ https://www.zhihu.com/question/61826619
 
 
 查看某个命令属于那个包： yum whatprovides /usr/bin/ps 
+
+
+
+debuginfo.rpm包的使用：1）下载相应的rpm包，wget
+                      2）安装rpm包，rpm -ivh，此时所有的debug信息已经解压到系统中了
+                      3）使用，gdb ps core.xxx 
+                      4) 如果提示找不到debug，那么需要用set home dir（类似的，具体不清楚）来指定debuginfo解压到的目录
