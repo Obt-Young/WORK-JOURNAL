@@ -1,3 +1,10 @@
 1.  xshell中使用ssh远程连接的时候，提示：ssh服务器拒绝了密码，请再试一次
     原因：sshd的设置不允许root用户用密码远程登录
     方案：修改 /etc/ssh/sshd_config文件，PermitRootLogin 字段改成yes
+
+
+如果想5min后不自动退出，还需要修改：
+1. /etc/ssh/sshd_config
+ClientAliveCountMax 为非0，最好>3
+2./etc/profile
+export TMOUT=300（300改成999999）
