@@ -19,3 +19,8 @@ debuginfo.rpm包的使用：1）下载相应的rpm包，wget
                       2）安装rpm包，rpm -ivh，此时所有的debug信息已经解压到系统中了
                       3）使用，gdb ps core.xxx 
                       4) 如果提示找不到debug，那么需要用set home dir（类似的，具体不清楚）来指定debuginfo解压到的目录
+
+
+core文件的性质：
+是出问题点环境的快照，使用gdb来调用此文件并不需要任何环境，只需要有执行程序和相应的debug信息就行了。
+因此“可执行程序要和问题环境一样”  且  “debuginfo要和问题环境一样”
