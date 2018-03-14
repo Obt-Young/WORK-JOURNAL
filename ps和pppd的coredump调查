@@ -1,0 +1,17 @@
+#1 首先要有rpm包的来源
+    wget  xxx.src.rpm
+    yumdownload --source xxx
+    
+    注意的点：yum源的设置，rpm包的安装
+    
+#2 安装debuginfo
+    wget  xxx-debuginfo.rpm
+    rpm -ivh xxx-debuginfo.rpm
+    至此，再使用gdb ps core-ps-xxx-xxx.xxx
+    此时便可以看到出问题的点了，core文件是一个快照，使用gdb就是查看这个快照，所以不需要复现出问题的环境，只要ps和ps的debuginfo和问题
+    环境一致即可
+    
+    同理pppd
+    
+#3 使用src.rpm解压出来的源码包跟踪和分析源码
+    源码在 ~/rpmbuild/BUILD/props-ng-xxxx  目录下，找到相应的源码即可
