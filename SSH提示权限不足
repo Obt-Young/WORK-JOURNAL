@@ -1,0 +1,5 @@
+1.修改可登陆权限
+#/etc/ssh/sshd_config
+PermitRootLogin改成yes
+
+2.重启sshd
