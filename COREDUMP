@@ -1,0 +1,8 @@
+ulimit -a  罗列系统的所有限制
+ulimit -c  罗列当前core文件的尺寸限制
+ulimit -c unlimit  不限制core文件的大小（开启）
+ulimit -c 0  限制core文件大小为0（关闭）
+
+
+gdb ./1 core.xxxx
+运行后，会自动停在出问题的位置
