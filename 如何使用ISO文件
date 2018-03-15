@@ -1,0 +1,6 @@
+•	mkdir iso
+•	sudo mount EulerOS-V2.0SP1-source-dvd.iso iso/
+•	cp iso/Packages/kernel-3.10.0-229.49.1.172.src.rpm .
+•	rpm2cpio kernel-3.10.0-229.49.1.172.src.rpm | cpio -div
+•	tar -jxvf patches.tar.bz2
+•	查看patch是否已经合入：ls patches/bugfix/0001-arch-x86-kvm-vmx.c-use-PAGE_ALIGNED-instead-of-IS_AL.patch
