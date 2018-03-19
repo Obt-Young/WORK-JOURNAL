@@ -29,6 +29,9 @@ const static int yk_g_c_s_i_int_0=0;  //.rodata
 static const int yk_g_s_c_i_int_0=0;  //.rodata
 const static int yk_g_c_s_i_int_1=1;  //.rodata
 static const int yk_g_s_c_i_int_1=1;  //.rodata
+const int yk_g_c_i_int_0=0;     //.rodata
+const int yk_g_c_i_int_1=1;     //.rodata
+const int yk_g_c_n_int;         //.bss
 
 
 int main(int argc,char ** argv)   //.text
@@ -40,7 +43,12 @@ int main(int argc,char ** argv)   //.text
     static int yk_l_s_i_int_0=0;  //.bss
     static int yk_l_s_i_int_1=1;  //.data
     
+    const yk_l_c_n_int;             //.stack,only run-time saw
+    const yk_l_c_i_int_0=0;         //.stack,only run-time saw
+    const yk_l_c_i_int_1=1;         //.stack,only run-time saw
+    
 }
-
-
 ```
+使用objdump -t 查看所有符号表，然后通过grep筛选  
+
+
