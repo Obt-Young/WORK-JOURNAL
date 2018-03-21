@@ -4,6 +4,31 @@ ulimit -c unlimit  不限制core文件的大小（开启）
 ulimit -c 0  限制core文件大小为0（关闭）
 
 
+------------------------------------------------------------------------------------------------
+一. 查询core dump文件路径：
+方法1：
+# cat /proc/sys/kernel/core_pattern
+方法2：
+# /sbin/sysctl kernel.core_pattern
+
+二. 修改core dump文件路径：
+方法1：临时修改：修改/proc/sys/kernel/core_pattern文件，但/proc目录本身是动态加载的，每次系统重启都会重新加载，因此这种方法只能作为临时修改。
+/proc/sys/kernel/core_pattern
+例：echo ‘/var/log/%e.core.%p’ > /proc/sys/kernel/core_pattern
+方法2：永久修改：使用sysctl -w name=value命令
+例：/sbin/sysctl -w kernel.core_pattern=/var/log/%e.core.%p
+
+为了更详尽的记录core dump当时的系统状态，可通过以下参数来丰富core文件的命名：
+%% 单个%字符
+%p 所dump进程的进程ID
+%u 所dump进程的实际用户ID
+%g 所dump进程的实际组ID
+%s 导致本次core dump的信号
+%t core dump的时间 (由1970年1月1日计起的秒数)
+%h 主机名
+%e 程序文件名
+------------------------------------------------------------------------------------------------
+
 gdb ./1 core.xxxx
 运行后，会自动停在出问题的位置
 
