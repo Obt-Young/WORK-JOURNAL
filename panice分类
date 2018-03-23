@@ -1,0 +1,61 @@
+panice分类：
+硬panic : Aiee!
+软panic:Oops!
+	当系统发现错误或异常时会向我们抛出”Oops”，比如用户空间的段错误。Oops会将信息放到控制台，包含处理器状态和发生错误时CPU寄存器的值。一旦系统发生了Oops，系统将不再可靠。
+
+Oops消息：
+BUG: unable to handle kernel NULL pointer dereference at (null)
+The first line indicates a pointer with a NULL value.
+IP: [<ffffffffa03e1012>] my_oops_init+0x12/0x21 [oops]
+IP is the instruction pointer.
+Oops: 0002 [#1] SMP
+Oops分类：
+This is the error code value in hex. Each bit has a significance of its own:
+•	bit 0 == 0 means no page found, 1 means a protection fault
+•	bit 1 == 0 means read, 1 means write
+•	bit 2 == 0 means kernel, 1 means user-mode
+•	[#1] — this value is the number of times the Oops occurred. Multiple Oops can be triggered as a cascading effect of the first one.
+CPU 1
+表明发生error的CPU.
+Pid: 2248, comm: insmod Tainted: P           2.6.33.3-85.fc13.x86_64
+以上信息表明，该错误是由进程号为2248的insmod进程引起的，2.6.33.3-85.fc13.x86_64是内核的版本信息
+
+Tainted标志定义在kernel/panic.c中，各个标志的含义如下：
+•	P — Proprietary module has been loaded.
+•	F — Module has been forcibly loaded.
+•	S — SMP with a CPU not designed for SMP.
+•	R — User forced a module unload.
+•	M — System experienced a machine check exception.
+•	B — System has hit bad_page.
+•	U — Userspace-defined naughtiness.
+•	A — ACPI table overridden.
+•	W — Taint on warning.
+RIP: 0010:[<ffffffffa03e1012>]  [<ffffffffa03e1012>] my_oops_init+0x12/0x21 [oops]
+RIP是CPU的一个寄存器，用于保存将要执行的指令地址
+0010 来自于代码段寄存器(code segment register). my_oops_init+0x12/0x21 is the <symbol> + the offset/length.
+
+RSP: 0018:ffff88007ad4bf08  EFLAGS: 00010292
+RAX: 0000000000000018 RBX: ffffffffa03e1000 RCX: 00000000000013b7
+RDX: 0000000000000000 RSI: 0000000000000046 RDI: 0000000000000246
+RBP: ffff88007ad4bf08 R08: ffff88007af1cba0 R09: 0000000000000004
+R10: 0000000000000000 R11: ffff88007ad4bd68 R12: 0000000000000000
+R13: 00000000016b0030 R14: 0000000000019db9 R15: 00000000016b0010
+以上是CPU其他寄存器的信息.
+
+Stack:
+ffff88007ad4bf38 ffffffff8100205f ffffffffa03de060 ffffffffa03de060
+ 0000000000000000 00000000016b0030 ffff88007ad4bf78 ffffffff8107aac9
+ ffff88007ad4bf78 00007fff69f3e814 0000000000019db9 0000000000020000
+以上是跟踪栈信息。
+
+Call Trace:
+[<ffffffff8100205f>] do_one_initcall+0x59/0x154
+[<ffffffff8107aac9>] sys_init_module+0xd1/0x230
+[<ffffffff81009b02>] system_call_fastpath+0x16/0x1b
+以上是在Oops发生前的函数调用栈信息
+
+Code: <c7> 04 25 00 00 00 00 00 00 00 00 31 c0 c9 c3 00 00 00 00 00 00 00
+以上是发生Oops时的机器码（16进制）
+
+这部分可以使用kernel源码中的./scripts/decodecode来查看：
+ 
