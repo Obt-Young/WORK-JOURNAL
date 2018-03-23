@@ -1,0 +1,94 @@
+1.在内核目录下创建一个helloworld目录，将下面的内容写入helloworld.c文件中
+————————————————————————————————————————————————————————————————————————————
+#include <linux/module.h>
+#include <linux/sched.h>
+#include <linux/fs.h>
+#include <linux/proc_fs.h>
+#include <linux/seq_file.h>
+#include <linux/uaccess.h>
+#include <linux/kernel.h>
+#include <linux/slab.h>
+MODULE_LICENSE("Dual BSD/GPL");
+
+static char *str = "hello world";
+/*********************
+ *  * seq_operations->show
+ *   * 必须返回0，否则什么也显示不出来
+ *      
+ *
+ *      --------------目标函数--------------
+ *      当 cat /proc/helloworld文件的时候，将会执行这个文件，有什么想输出的，都通过seq_printf来输出
+ *    *********************/
+static int
+my_proc_show(struct seq_file *m, void *v)
+{
+        seq_printf(m, "current kernel time is %ld\n", jiffies);
+        seq_printf(m, "str is %s\n", str);
+
+        return 0;
+}
+/***********************
+ *  * file_operations->open
+ *   ***********************/
+static int
+my_proc_open(struct inode *inode, struct file *file)
+{
+        return single_open(file, my_proc_show, NULL);
+}
+/************************
+ *  * file_operations->write
+ *   ************************/
+static ssize_t
+my_proc_write(struct file *file, const char __user *buffer, size_t count, loff_t *f_pos)
+{
+        char *tmp = kzalloc((count+1), GFP_KERNEL);
+        if (!tmp)
+                return -ENOMEM;
+
+        if (copy_from_user(tmp,buffer,count)) {
+                kfree(tmp);
+                return -EFAULT;
+        }
+
+        kfree(str);
+        str = tmp;
+
+        return count;
+}
+static struct file_operations my_fops = {
+        .owner  = THIS_MODULE,
+        .open   = my_proc_open,
+        .release = single_release,
+        .read   = seq_read,
+        .llseek = seq_lseek,
+        .write  = my_proc_write,
+};
+static int hello_init(void)
+{
+        printk(KERN_ALERT "hello world");
+
+        proc_create("helloworld",0,NULL,&my_fops);
+
+        return 0;
+}
+static void hello_exit(void)
+{
+        printk(KERN_ALERT "Bye Bye");
+
+}
+module_init(hello_init);
+module_exit(hello_exit);
+
+2.创建Makefile，编译
+————————————————————————————————————————————————————————————————————————————————————
+obj-m := helloworld.o
+
+make M=helloworld
+
+3.导入模块
+————————————————————————————————————————————————————————————————————————————————————
+insmod  helloworld.ko
+
+4.看结果
+————————————————————————————————————————————————————————————————————————————————————
+cat /proc/helloworld
