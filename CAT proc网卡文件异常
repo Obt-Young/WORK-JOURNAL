@@ -1,0 +1,106 @@
+/proc概述
+/proc目录下的文件是都是虚文件，在对其操作之前，这些文件是没有内容的，它们就可以被认为是一个窗户，透过窗户可以看见里面的东西。这些东西，或是内核的数据，或是内核模块的数据。（是否可以是用户应用程序的数据？需要实践）
+
+
+创建自己的proc文件
+/proc文件的创建主要通过系统调用来实现。不同的内核版本有不同的系统调用。
+在3.0.x的版本中，是通过create_proc_read_entry这个函数创建的。
+在3.10.x的版本中，是通过proc_create这个函数创建的。
+具体的创建方法见附件《创建自己的proc文件》，其他版本内核使用哪个函数需要具体对待
+
+
+网卡设备的proc文件
+查看网卡及其统计信息的时候，可使用cat /proc/net/dev，此命令会输出所有网卡的统计数据列表，其中包括很多内容，例如：
+ 
+从输出可见，所有的网卡统计信息都在里面，那么这个/proc/net/dev的文件是怎么创建出来的呢，搜索源码，最终定位在/net/core/net-procfs.c：
+static int __net_init dev_proc_net_init(struct net *net)
+{
+  …
+	//		文件名 | 操作权限 | 根目录/proc/net | 文件操作接口
+if (!proc_create("dev", S_IRUGO, net->proc_net,&dev_seq_fops))
+  …
+}
+	可见，并不是哪一块网卡的驱动做了这个动作，而是专门有一个网络相关的proc文件系统管理代码段。
+
+
+网卡信息的获取
+	既然proc文件系统是由net-procfs.c创建的，那么针对/proc/net/dev这个文件的相关操作肯定也是定义在这套代码里，追踪调用关系最终可得：
+	注：调用关系的细节见附件《函数调用关系》
+/* net/core/dev.c*/
+ 
+	Cat输出中数据相关的内容就是来自于这个函数，直接对应的数据结构就是const struct rtnl_link_stats64 *stats，而获取这个数据结构的函数就是dev_get_stats,其接受一个struct net_device的数据结构，输出一个struct rtnl_link_stats64的数据结构。
+     进入dev_get_stats:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* net/core/dev.c*/
+ 
+	
+	从函数的说明来看，这个函数是用来获取网络设备统计数据的。参数1是网络设备的数据结构，参数2是存放输出统计数据的数据结构。
+	其中有一个逻辑判断，说明也给出了逻辑判断的解释：如果要访问的网络设备（参数1）在自己的net_devicenetdev_ops中定义了nod_get_stats64或者nod_get_stats中的任意一个，那么使用定义的函数。如果没有定义，那么使用netdev_stats_tostats64来直接处理net_device结构中的stats域。
+	再来看netdev_stats_tostats64：
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* net/core/dev.c*/
+ 
+	从函数说明来看，就是把net_device_stats数据类型转换成rtnl_link_stats64的数据类型，而net_device_stats对应的就是net_device结构中的stats域。
+	
+
+
+小结1
+	目前来看，net_device结构中的stats域将是显示cat显示数值的直接数据源。
+
+
+
+net_device中stats域值的源头
+	思路：首先，找到net_device的源头，进而确定哪些动作会对stats域做增删改查的动作。
+
+
+
+
+/*include/linux/netdevice.h*/
+ 
+ 
+ 
+
+
+/*include/linux/netdevice.h*/
+ 
+上面这个结构中的内容，就是我们想要的。
+我们选择mellanox的网卡驱动来分析（实际出问题的就是这个厂家的网卡），所有mellanox驱动中使用此结构体的文件如下：
+	 
+
+
+小结2
+	综上，可以有一个初步的结论：
+	/proc/net/dev这个文件是由一个独立的net-procfs模块创建的；
+	/proc/net/dev这个文件里面的内容，是net-procfs获取的：
+1）要么是网卡驱动自己实现相关接口供net-procfs调用；
+2）要么net-procfs直接查询网卡设备的数据结构net_device中的struct net_device_stats stats域获取并显示。
+
+
+驱动程序分析
+	见附件《驱动程序分析》
