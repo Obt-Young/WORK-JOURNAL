@@ -1,0 +1,28 @@
+buff和cache的区别
+Buff：（内核管理的一块内存区域）
+举个例子，write动作会把零碎的几个几十个字节的数据先写到buff中，当达到一定的数目时，或者受到某个指定信号时一并做IO动作。是为了减少IO次数，提高系统整体效率。
+Buff一般
+
+Cache：（CPU的一个模块，或者一个独立的硬件设备）
+会记录CPU近期处理的一些数据，把可能用到的或者经常用到的数据暂存一下，这样可以减少CPU访问内存的次数，是为了提高CPU的工作效率。
+
+部分图：
+CPU  ——	cache  ——   内存
+						 (buff)  ——  硬盘
+
+
+性能查看命令
+  
+查看CPU信息
+  lscpu
+查看CPU的核数
+  less /proc/cpuinfo |grep 'model name' -c
+以M为单位查看内存情况
+  free –m
+查看内存相关的所有参数
+  cat  /proc/meminfo
+监视磁盘I/O操作
+Iostat
+打印内核缓冲区信息
+Dmesg
+
