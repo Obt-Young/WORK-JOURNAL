@@ -1,0 +1,4 @@
+qemu-img create -f qcow2 yangk_xxx.img 100G
+
+virt-mananger
+
