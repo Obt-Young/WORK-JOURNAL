@@ -91,7 +91,15 @@ http://blog.csdn.net/w6980112/article/details/48524021
           变更日志
 
 
+-----------------------------------------------------------------------------------------------
+rpmbuild -bp xxx.spec文件输出目录的作用
 
+BUILD:
+BUILDROOT:
+RPMS:放rpm文件的地方，rpmbuild -ba后，会把打包好的rpm文件放在这
+SOURCES:
+SPECS:放spec文件的地方
+SRPMS:放src.rpm文件的地方，rpmbuild -ba后，会把打包好的src.rpm文件放在这
 
 
 
