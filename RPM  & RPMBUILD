@@ -175,5 +175,11 @@ yumdownloader下载之后
 				rpm -Uvh config-os-cloudedge-1.0-2.src.rpm
 
 
+=============================问题==============================
+warning: user mockbuild does not exist - using root
+warning: group mockbuild does not exist - using root
+
+不用管，只是缺少了相关的组，不影响使用，代码已经安装完成了
+
 
 
