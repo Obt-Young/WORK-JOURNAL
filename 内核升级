@@ -1,0 +1,9 @@
+下载内核的rpm包
+wget xxx.rpm
+yum --downloadonly xxx
+
+安装rpm包
+rpm -ivh xxx.rpm
+
+如果想回退版本
+rpm -ivh --oldpackage xxx.rpm 
