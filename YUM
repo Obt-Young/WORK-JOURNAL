@@ -55,7 +55,9 @@
         范例一：删除已下载过的所有容器的相关数据 (含软件本身与列表)
         [root@www ~]# yum clean all
         
-#8  -   
+#8  -   指定从哪个repo下载
+        yum install gdb --enablerepo=xxx             (xxx是repo文件中的repo名字)
+        yumdownloader --source kernel --enablerepo=xxx          （xxx是repo文件中的repo名字）
         
         
         
