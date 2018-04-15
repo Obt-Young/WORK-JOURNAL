@@ -1,3 +1,6 @@
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++            编译内核           +++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 如何编译内核：http://www.cnblogs.com/xiaocen/p/3717993.html
 
 
@@ -13,6 +16,49 @@
   make install
 6.设置默认启动内核为当前的内核
 7.reboot
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++          设置默认启动内核      +++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+http://hugyou.blog.51cto.com/11674506/1793094
+
+
+1. 查看当前默认启动内核
+——————————————————————————————————————————————————————————————
+[root@localhost yangkun]# grub2-editenv list
+saved_entry=CentOS Linux, with Linux 3.10.0-123.el7.x86_64
+
+
+2. 罗列所有内核
+——————————————————————————————————————————————————————————————
+[root@localhost yangkun]# cat /boot/grub2/grub.cfg | grep menuentry
+if [ x"${feature_menuentry_id}" = xy ]; then
+  menuentry_id_option="--id"
+  menuentry_id_option=""
+export menuentry_id_option
+menuentry 'CentOS Linux (3.10.107) 7 (Core)' --class centos --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-3.10.0-123.el7.x86_64-advanced-c2673a5b-1cf0-4c66-b8ce-a0aec9370bf5' {
+menuentry 'CentOS Linux, with Linux 3.10.0-123.el7.x86_64' --class centos --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-3.10.0-123.el7.x86_64-advanced-c2673a5b-1cf0-4c66-b8ce-a0aec9370bf5' {
+menuentry 'CentOS Linux, with Linux 0-rescue-c4cebf4178d142359e5eeab989f93561' --class centos --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-0-rescue-c4cebf4178d142359e5eeab989f93561-advanced-c2673a5b-1cf0-4c66-b8ce-a0aec9370bf5' {
+
+
+3. 设置默认启动内核
+———————————————————————————————————————————————————————————————
+[root@localhost yangkun]# grub2-set-default 'CentOS Linux (3.10.107) 7 (Core)'
+
+
+4. 确认改动的结果
+————————————————————————————————————————————————————————————————
+[root@localhost yangkun]# grub2-editenv list
+saved_entry=CentOS Linux (3.10.107) 7 (Core)
+
+
+5.  重启系统
+————————————————————————————————————————————————————————————————
+reboot 
+uname -a
+
+
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #1  -  System.map文件是什么？
