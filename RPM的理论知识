@@ -94,10 +94,10 @@ http://blog.csdn.net/w6980112/article/details/48524021
 -----------------------------------------------------------------------------------------------
 rpmbuild -bp xxx.spec文件输出目录的作用
 
-BUILD:
+BUILD:基线版本打上所有patch后的版本（一般都用这个目录下的源码，而不是SOURCE，这里是SOURCE使用spec文件后的输出结果）
 BUILDROOT:
 RPMS:放rpm文件的地方，rpmbuild -ba后，会把打包好的rpm文件放在这
-SOURCES:
+SOURCES:基线版本+所有patch（所以在这里能看到源码的tar包，这个tar包就是基线版本）
 SPECS:放spec文件的地方
 SRPMS:放src.rpm文件的地方，rpmbuild -ba后，会把打包好的src.rpm文件放在这
 
