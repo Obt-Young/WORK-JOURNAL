@@ -1,0 +1,37 @@
+#1 描述：
+   通过make oldconfig命令始终无法把TIPC模块放到.config文件中，甚至在文件中都看不到任何TIPC相关字眼。
+   
+#2 尝试：
+   1）尝试make configs/xxx.config menuconfig等都不好使
+   2）在网上看到make config和make menuconfig会从各个模块的Kconfig文件中读取配置，重构.config文件，于是乎猜测是否可以通过修改Kconfig文件的信息，然后
+   再使用make menuconfig来获取TIPC呢？
+   3）答案是肯定的，打开TIPC的Kconfig文件，发现
+   menuconfig TIPC
+        tristate "The TIPC Protocol （EXPERIMENTAL）"
+        depends on INET & EXPERIMENTAL
+        ---help---
+          The Transparent Inter Process Communication (TIPC) protocol is
+          specially designed for intra cluster communication. This protocol
+          originates from Ericsson where it has been used in carrier grade
+          cluster applications for many years.
+
+          For more information about TIPC, see http://tipc.sourceforge.net.
+
+          This protocol support is also available as a module ( = code which
+          can be inserted in and removed from the running kernel whenever you
+          want). The module will be called tipc. If you want to compile it
+          as a module, say M here and read <file:Documentation/kbuild/modules.txt>.
+
+          If in doubt, say N.
+    4)这里面的EXPERIMENTAL很扎眼，因为在其他内核tipc的Kconfig文件中是没有这个内容的
+    5)把EXPERIMENTAL字样删掉，执行make menuconfig，发现tipc已经出现在.config文件中了
+    6)打开开关，重新编译即可
+    
+#3 疑问
+    这个EXPERIMENTAL到底是什么？为什么会导致模块在.config文件中不显示？内部的工作机理是什么样的？
+    
+#4 需要学习
+    1）make oldconfig 到底是怎么工作的，干了哪些事情？
+    2）在创建.config文件的时候，是否可以指定某个config文件作为蓝本，貌似make config/oldconfig/menuconfig等在生成文件的同时，还会做一些其他必要的
+      动作，这些动作干了什么事？有哪些影响？
+    
