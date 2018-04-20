@@ -4,6 +4,8 @@
 如何编译内核：http://www.cnblogs.com/xiaocen/p/3717993.html
 
 
+(单独编译内核模块：make CONFIG_TIPC=m M=net/tipc)
+
 1.生成模块配置文件
   make oldconfig
 2.根据需求调整配置文件
