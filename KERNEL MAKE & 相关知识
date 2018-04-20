@@ -10,6 +10,8 @@
   vim .config
 3.开始编译内核
   make -jN    (N为CPU核的2倍)
+  make -i   强制编译，不应错误而终止
+            （编译的过程中，可能部分不是很重要的驱动或者功能编译时缺少文件，比如某个操作系统自己定制的，或者把config文件中配置的功能裁减掉了）
 4.拷贝所有.ko文件至/usr/lib/modules/3.10.107中
   make modules_install    (make modules install不会创建相关目录，需要带下划线的)
 5.拷贝System.map和vmlinuz到/boot中（）
