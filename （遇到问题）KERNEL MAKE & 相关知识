@@ -26,6 +26,10 @@
 7.reboot
 
 
+需要验证：
+    修改内核版本号，是否必须在编译之前就在Makefile中改好，如果先编译完，然后在make modules_install和make install之前修改，是否会有效果？
+
+
 遇到的问题：
     现在Centos7.4貌似不支持tipc，tipc相关代码都被移除了，编译的时候不通过，采取把tipc源代码直接复制到对应目录下，
     然后make TIPC_CONFIG=m M=net/tipc来编译，但是发现代码中需要指定一个宏CONFIG_TIPC_PORTS，这就很尴尬，需要
