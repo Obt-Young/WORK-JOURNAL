@@ -1,0 +1,6 @@
+netstat -an   ：  端口
+netstat -anp  ：  端口+进程号+进程名
+
+netstat -an|grep 6666
+
+netstat -anp|grep NJCC
