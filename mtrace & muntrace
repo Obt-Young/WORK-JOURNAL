@@ -1,4 +1,46 @@
 void mtrace(void)
-通过对内存管理系列函数(malloc，realloc，memalign，free)注册钩子来达到监控内存泄露和其他内存错误操作
+  通过对内存管理系列函数(malloc，realloc，memalign，free)注册钩子来达到监控内存泄露和其他内存错误操作
 void muntrace(void)
-用来解除mtrace注册的钩子
+  用来解除mtrace注册的钩子
+  
+使用方法：
+ In normal usage, mtrace() is called once at the start of execution of a program, and muntrace() is never called.
+
+案例：
+       The  shell session below demonstrates the use of the mtrace() function and the mtrace(1) command in a program that has memory leaks at two differ‐
+       ent locations.  The demonstration uses the following program:
+
+           $ cat t_mtrace.c
+           #include <mcheck.h>
+           #include <stdlib.h>
+           #include <stdio.h>
+
+           int
+           main(int argc, char *argv[])
+           {
+               int j;
+
+               mtrace();
+
+               for (j = 0; j < 2; j++)
+                   malloc(100);            /* Never freed--a memory leak */
+
+               calloc(16, 16);             /* Never freed--a memory leak */
+               exit(EXIT_SUCCESS);
+           }
+
+       When we run the program as follows, we see that mtrace() diagnosed memory leaks at two different locations in the program:
+
+           $ cc -g t_mtrace.c -o t_mtrace
+           $ export MALLOC_TRACE=/tmp/t
+           $ ./t_mtrace
+           $ mtrace ./t_mtrace $MALLOC_TRACE
+           Memory not freed:
+           -----------------
+              Address     Size     Caller
+           0x084c9378     0x64  at /home/cecilia/t_mtrace.c:12
+           0x084c93e0     0x64  at /home/cecilia/t_mtrace.c:12
+           0x084c9448    0x100  at /home/cecilia/t_mtrace.c:16
+
+       The first two messages about unfreed memory correspond to the two malloc(3) calls inside the for loop.  The final message corresponds to the  call
+       to calloc(3) (which in turn calls malloc(3)).
