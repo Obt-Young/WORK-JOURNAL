@@ -1,0 +1,4 @@
+void mtrace(void)
+通过对内存管理系列函数(malloc，realloc，memalign，free)注册钩子来达到监控内存泄露和其他内存错误操作
+void muntrace(void)
+用来解除mtrace注册的钩子
