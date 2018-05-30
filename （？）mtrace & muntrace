@@ -1,12 +1,15 @@
-void mtrace(void)
-  通过对内存管理系列函数(malloc，realloc，memalign，free)注册钩子来达到监控内存泄露和其他内存错误操作
-void muntrace(void)
-  用来解除mtrace注册的钩子
+#0  -  查看mtrace源码，观察是怎么下钩子的？？？？？？
+
+#1 
+   void mtrace(void)
+      通过对内存管理系列函数(malloc，realloc，memalign，free)注册钩子来达到监控内存泄露和其他内存错误操作
+   void muntrace(void)
+      用来解除mtrace注册的钩子
   
-使用方法：
+#2  -  使用方法：
  In normal usage, mtrace() is called once at the start of execution of a program, and muntrace() is never called.
 
-案例：
+#3  -  案例：
        The  shell session below demonstrates the use of the mtrace() function and the mtrace(1) command in a program that has memory leaks at two differ‐
        ent locations.  The demonstration uses the following program:
 
