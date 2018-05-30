@@ -1,0 +1,13 @@
+6.31 Declaring Attributes of Functions
+
+In GNU C, you can use function attributes to declare certain things about functions called in your program which help the compiler optimize calls and check your code more carefully. For example, you can use attributes to declare that a function never returns (noreturn), returns a value depending only on its arguments (pure), or has printf-style arguments (format).
+
+You can also use attributes to control memory placement, code generation options or call/return conventions within the function being annotated. Many of these attributes are target-specific. For example, many targets support attributes for defining interrupt handler functions, which typically must follow special register usage and return conventions.
+
+Function attributes are introduced by the __attribute__ keyword on a declaration, followed by an attribute specification inside double parentheses. You can specify multiple attributes in a declaration by separating them by commas within the double parentheses or by immediately following an attribute declaration with another attribute declaration. See Attribute Syntax, for the exact rules on attribute syntax and placement. Compatible attribute specifications on distinct declarations of the same function are merged. An attribute specification that is not compatible with attributes already applied to a declaration of the same function is ignored with a warning.
+
+GCC also supports attributes on variable declarations (see Variable Attributes), labels (see Label Attributes), enumerators (see Enumerator Attributes), statements (see Statement Attributes), and types (see Type Attributes).
+
+There is some overlap between the purposes of attributes and pragmas (see Pragmas Accepted by GCC). It has been found convenient to use __attribute__ to achieve a natural attachment of attributes to their corresponding declarations, whereas #pragma is of use for compatibility with other compilers or constructs that do not naturally form part of the grammar.
+
+In addition to the attributes documented here, GCC plugins may provide their own attributes.
