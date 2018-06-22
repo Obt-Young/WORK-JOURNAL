@@ -82,3 +82,14 @@ func.o: func.c ../include/1/1.h
 
 #23 生成动态库文件 xxx.so (见“制作动态库”)
 
+#24 查看lib库的搜索路径 ： gcc -print-search-dirs
+    添加搜索路径到默认路径：
+    编译时指定临时库搜索路径：gcc -L/home/mylib
+
+#25 查看头文件的搜索路径：gcc -v -x c -E -    (-x c用来指定为c语言，这个命令的最后会输出include<>和include""的搜索路径)
+    添加搜索路径到默认路径：
+    编译时指定临时头文件搜索路径：gcc -I/home/myinclude
+
+#26 查看动态库的搜索路径：cat /etc/ld.so.conf
+    添加搜索路径到默认路径：vim /etc/ld.so.conf
+    编译时指定临时动态库搜索路径：gcc -L/home/mylib
