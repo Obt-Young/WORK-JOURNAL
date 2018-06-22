@@ -17,4 +17,4 @@
 
   #1 - 生成   gcc -fPIC -shared -o 1.so x1.c x2.c ... xn.c
 
-  #2 - 使用   gcc -Ldir -lname 
+  #2 - 使用   gcc -L<dir> -l<fullpath>
