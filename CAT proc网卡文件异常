@@ -1,5 +1,6 @@
 /proc概述
-/proc目录下的文件是都是虚文件，在对其操作之前，这些文件是没有内容的，它们就可以被认为是一个窗户，透过窗户可以看见里面的东西。这些东西，或是内核的数据，或是内核模块的数据。（是否可以是用户应用程序的数据？需要实践）
+/proc目录下的文件是都是虚文件，在对其操作之前，这些文件是没有内容的，它们就可以被认为是一个窗户，透过窗户可以看见里面的东西。这些东西，
+或是内核的数据，或是内核模块的数据。（是否可以是用户应用程序的数据？需要实践）
 
 
 创建自己的proc文件
@@ -28,45 +29,23 @@ if (!proc_create("dev", S_IRUGO, net->proc_net,&dev_seq_fops))
 	注：调用关系的细节见附件《函数调用关系》
 /* net/core/dev.c*/
  
-	Cat输出中数据相关的内容就是来自于这个函数，直接对应的数据结构就是const struct rtnl_link_stats64 *stats，而获取这个数据结构的函数就是dev_get_stats,其接受一个struct net_device的数据结构，输出一个struct rtnl_link_stats64的数据结构。
+	Cat输出中数据相关的内容就是来自于这个函数，直接对应的数据结构就是const struct rtnl_link_stats64 *stats，而获取这个数据结构的函数就是
+	dev_get_stats,其接受一个struct net_device的数据结构，输出一个struct rtnl_link_stats64的数据结构。
      进入dev_get_stats:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* net/core/dev.c*/
  
 	
 	从函数的说明来看，这个函数是用来获取网络设备统计数据的。参数1是网络设备的数据结构，参数2是存放输出统计数据的数据结构。
-	其中有一个逻辑判断，说明也给出了逻辑判断的解释：如果要访问的网络设备（参数1）在自己的net_devicenetdev_ops中定义了nod_get_stats64或者nod_get_stats中的任意一个，那么使用定义的函数。如果没有定义，那么使用netdev_stats_tostats64来直接处理net_device结构中的stats域。
+	其中有一个逻辑判断，说明也给出了逻辑判断的解释：如果要访问的网络设备（参数1）在自己的net_devicenetdev_ops中定义了nod_get_stats64或者
+	nod_get_stats中的任意一个，那么使用定义的函数。如果没有定义，那么使用netdev_stats_tostats64来直接处理net_device结构中的stats域。
 	再来看netdev_stats_tostats64：
-
-
-
-
-
-
-
-
-
-
-
 
 
 /* net/core/dev.c*/
  
-	从函数说明来看，就是把net_device_stats数据类型转换成rtnl_link_stats64的数据类型，而net_device_stats对应的就是net_device结构中的stats域。
+	从函数说明来看，就是把net_device_stats数据类型转换成rtnl_link_stats64的数据类型，而net_device_stats对应的就是net_device结构中的
+	stats域。
 	
 
 
@@ -79,14 +58,10 @@ net_device中stats域值的源头
 	思路：首先，找到net_device的源头，进而确定哪些动作会对stats域做增删改查的动作。
 
 
-
-
 /*include/linux/netdevice.h*/
  
  
  
-
-
 /*include/linux/netdevice.h*/
  
 上面这个结构中的内容，就是我们想要的。
