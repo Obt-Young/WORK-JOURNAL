@@ -1,0 +1,1 @@
+auditctl -w /full/path/to/file -p wa -k CHG_file
