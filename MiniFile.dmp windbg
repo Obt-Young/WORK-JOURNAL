@@ -1,3 +1,11 @@
 
 https://blog.csdn.net/itworld123/article/details/79047788
 https://www.52pojie.cn/thread-599555-1-1.html
+
+
+在持有pdb文件、exe文件和dmp文件的情况下，打开windbg使用如下流程进行调试:
+1.File -> Symbol File Path -> 选择pdb文件存放路径
+2.File -> Image File Path -> 选择exe文件存放路径
+3.File -> Open Crash Dump -> 选择DMP文件存放路径
+4.最后会弹出WinDbg对崩溃文件的初步分析的结果，在下面的输入框中输入“!analyze -v”
+
