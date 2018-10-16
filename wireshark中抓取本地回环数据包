@@ -1,1 +1,3 @@
 route add 192.168.1.106 mask 255.255.255.255 192.168.1.1 metric 1
+
+https://wiki.wireshark.org/CaptureSetup/Loopback
